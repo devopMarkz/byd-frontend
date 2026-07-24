@@ -32,10 +32,10 @@
             <option value="CUSTO_VARIAVEL">Custo variável</option>
           </select>
         </div>
-        <div class="field" v-if="secao === 'origens'">
+        <!-- <div class="field" v-if="secao === 'origens'">
           <label>Imagem <small>JPG ou PNG, até 1 MB</small></label>
           <input accept="image/jpeg,image/png" type="file" @change="selecionarImagem" />
-        </div>
+        </div> -->
         <button class="salvar" :disabled="salvando">{{ editandoId ? 'Salvar alteração' : 'Adicionar' }}</button>
         <button v-if="editandoId" class="cancelar" type="button" @click="limparFormulario">Cancelar</button>
       </form>
