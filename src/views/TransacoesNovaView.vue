@@ -63,7 +63,7 @@
               {{ formatar(item.data) }} · {{ tipo === 'E' ? item.origemNome : item.categoriaSaidaNome }}
             </strong>
             <p v-if="tipo === 'E'" class="meta">
-              {{ item.quantidadeViagens }} viagens · {{ item.quilometrosRodados }} km · {{ item.horasTrabalhadas }} h
+              {{ item.quantidadeViagens }} viagens · {{ item.quilometrosRodados }} km · {{ formatarDuracao(item.horasTrabalhadas) }}
             </p>
             <p v-else-if="tipo === 'S'" class="meta">{{ item.tipoGasto }}</p>
             <p v-else class="meta">
@@ -127,7 +127,7 @@
               <div class="detalhe"><dt>Origem</dt><dd>{{ preview.origemNome || '—' }}</dd></div>
               <div class="detalhe"><dt>Viagens</dt><dd>{{ preview.quantidadeViagens ?? '—' }}</dd></div>
               <div class="detalhe"><dt>Quilômetros</dt><dd>{{ preview.quilometrosRodados ?? '—' }} km</dd></div>
-              <div class="detalhe"><dt>Horas</dt><dd>{{ preview.horasTrabalhadas ?? '—' }} h</dd></div>
+              <div class="detalhe"><dt>Horas</dt><dd>{{ preview.horasTrabalhadas == null ? '—' : formatarDuracao(preview.horasTrabalhadas) }}</dd></div>
             </template>
             <template v-else-if="tipo === 'S'">
               <div class="detalhe"><dt>Categoria</dt><dd>{{ preview.categoriaSaidaNome || '—' }}</dd></div>
@@ -256,6 +256,10 @@ function moeda(v: number) {
 }
 function formatar(v: string) {
   return formatarDataBrasileira(v)
+}
+function formatarDuracao(v: number) {
+  const minutos = Math.max(0, Math.round(Number(v ?? 0) * 60))
+  return `${String(Math.floor(minutos / 60)).padStart(2, '0')}:${String(minutos % 60).padStart(2, '0')}`
 }
 async function carregar() {
   erro.value = ''

@@ -41,7 +41,7 @@
           <div class="titulo-secao"><h2>Estatísticas</h2><span>{{ intervalo }}</span></div>
           <div class="estatisticas">
             <div><span>Viagens</span><strong>{{ painel.estatisticas.totalViagens }}</strong></div>
-            <div><span>Horas</span><strong>{{ numero(painel.estatisticas.horasTrabalhadas) }} h</strong></div>
+            <div><span>Horas</span><strong>{{ formatarDuracao(painel.estatisticas.horasTrabalhadas) }}</strong></div>
             <div><span>KM</span><strong>{{ numero(painel.estatisticas.quilometrosRodados) }}</strong></div>
             <div><span>R$/viagem</span><strong>{{ moeda(painel.estatisticas.receitaPorViagem) }}</strong></div>
             <div><span>R$/hora</span><strong>{{ moeda(painel.estatisticas.receitaPorHora) }}</strong></div>
@@ -73,7 +73,7 @@
           <div v-if="painel.ultimaJornada" class="jornada-resumo">
             <div><span>Início</span><strong>{{ formatarData(painel.ultimaJornada.data) }} · {{ horario(painel.ultimaJornada.inicio) }}</strong></div>
             <div><span>Fim</span><strong>{{ painel.ultimaJornada.fim ? horario(painel.ultimaJornada.fim) : 'Em andamento' }}</strong></div>
-            <div><span>Horas</span><strong>{{ numero(painel.ultimaJornada.horasTrabalhadas) }} h</strong></div>
+            <div><span>Horas</span><strong>{{ formatarDuracao(painel.ultimaJornada.horasTrabalhadas) }}</strong></div>
             <div><span>KM</span><strong>{{ numero(painel.ultimaJornada.quilometrosPercorridos) }}</strong></div>
           </div>
           <p v-else class="vazio">Você ainda não registrou jornadas.</p>
@@ -132,6 +132,7 @@ const carregando = ref(true), erro = ref(''), jornadaAberta = ref(false)
 const intervalo = computed(() => painel.value ? `${formatarData(painel.value.inicio)} a ${formatarData(painel.value.fim)}` : '')
 function moeda(v: number) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v ?? 0) }
 function numero(v: number) { return Number(v ?? 0).toFixed(2) }
+function formatarDuracao(v: number) { const minutos = Math.max(0, Math.round(Number(v ?? 0) * 60)); return `${String(Math.floor(minutos / 60)).padStart(2, '0')}:${String(minutos % 60).padStart(2, '0')}` }
 function formatarData(d: string) { return formatarDataBrasileira(d) }
 function horario(v: string) { return v?.slice(0, 5) }
 function selecionarPeriodo(v: Periodo) {

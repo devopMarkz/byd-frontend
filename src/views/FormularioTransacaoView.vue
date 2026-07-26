@@ -17,7 +17,7 @@
     </header>
 
     <main class="conteudo">
-      <form class="formulario" @submit.prevent="salvar">
+      <form class="formulario" @submit.prevent="aoSalvar">
         <div class="row">
           <div class="field"><label>Data</label><input v-model="data" type="date" required /></div>
           <div class="field"><label>Dia da semana</label><input :value="diaSemana" disabled /></div>
@@ -32,10 +32,10 @@
           </div>
           <button type="button" class="secundario" @click="puxarUltimaJornada">Puxar última jornada</button>
           <div class="row">
-            <div class="field"><label>Jornada - início</label><input v-model="jornadaInicio" type="datetime-local" required /></div>
-            <div class="field"><label>Jornada - fim</label><input v-model="jornadaFim" type="datetime-local" required /></div>
+            <div class="field"><label>Jornada - início</label><input v-model="jornadaInicio" type="datetime-local" /></div>
+            <div class="field"><label>Jornada - fim</label><input v-model="jornadaFim" type="datetime-local" /></div>
           </div>
-          <div class="field"><label>Horas trabalhadas</label><input :value="horasTrabalhadas" disabled /></div>
+          <div class="field"><label>Horas trabalhadas</label><input v-model="horasTrabalhadasTexto" inputmode="numeric" placeholder="HH:mm (ex.: 06:39)" @blur="atualizarHorasManuais" /></div>
           <div v-if="notaAtual" class="nota-atual">
             <p><strong>Nota fiscal:</strong> {{ notaAtualNome }}</p>
             <div class="acoes-nota">
@@ -72,13 +72,19 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { duracaoParaHoras, formatarDuracao } from '@/utils/duracao'
 import { origemService } from '@/services/origemService'; import { categoriaSaidaService } from '@/services/categoriaSaidaService'; import { formaPagamentoService } from '@/services/formaPagamentoService'; import { receitaService } from '@/services/receitaService'; import { despesaService } from '@/services/despesaService'; import { jornadaService } from '@/services/jornadaService'; import { dataAtualBrasil } from '@/utils/data'
 const router=useRouter(), route=useRoute(), edicao=Boolean(route.params.id), tipo=ref<'ENTRADA'|'SAIDA'>(route.query.tipo==='SAIDA'?'SAIDA':'ENTRADA'), data=ref(dataAtualBrasil()), diaSemana=ref(''), valor=ref<number>(), origemId=ref(''), quantidadeViagens=ref(0), quilometrosRodados=ref(0), horasTrabalhadas=ref(0), jornadaId=ref<string|null>(null), jornadaInicio=ref(''), jornadaFim=ref(''), categoriaSaidaId=ref(''), formaPagamentoId=ref(''), tipoGasto=ref('DIARIO_SEMANAL'), itemManutencao=ref(''), observacao=ref(''), notaFiscalBase64=ref<string|null>(null), notaFiscalNome=ref<string|null>(null), notaFiscalTipo=ref<string|null>(null), notaAtual=ref(false), notaAtualNome=ref(''), origens=ref<any[]>([]), categorias=ref<any[]>([]), formas=ref<any[]>([]), salvando=ref(false), erro=ref('')
+const horasTrabalhadasTexto=ref(formatarDuracao(0))
 function atualizarDia(){diaSemana.value=new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(new Date(`${data.value}T12:00:00`))}
-function calcularHoras(){if(!jornadaInicio.value||!jornadaFim.value)return;const diferenca=new Date(jornadaFim.value).getTime()-new Date(jornadaInicio.value).getTime();horasTrabalhadas.value=Math.max(0,Number((diferenca/3600000).toFixed(2)))}
+function calcularHoras(){if(!jornadaInicio.value||!jornadaFim.value)return;const diferenca=new Date(jornadaFim.value).getTime()-new Date(jornadaInicio.value).getTime();horasTrabalhadas.value=Math.max(0,Number((diferenca/3600000).toFixed(2)));horasTrabalhadasTexto.value=formatarDuracao(horasTrabalhadas.value)}
+function atualizarHorasManuais(){const horas=duracaoParaHoras(horasTrabalhadasTexto.value);if(horas===null){erro.value='Informe as horas no formato HH:mm, por exemplo 06:39.';horasTrabalhadasTexto.value=formatarDuracao(horasTrabalhadas.value);return}erro.value='';horasTrabalhadas.value=horas;horasTrabalhadasTexto.value=formatarDuracao(horas)}
 async function puxarUltimaJornada(){const lista=await jornadaService.listar();const jornada=lista.find(j=>j.status==='ENCERRADA'&&j.horarioFim);if(!jornada){erro.value='Nenhuma jornada encerrada encontrada.';return}jornadaId.value=jornada.id;jornadaInicio.value=`${jornada.data}T${jornada.horarioInicio.slice(0,5)}`;jornadaFim.value=`${jornada.data}T${jornada.horarioFim!.slice(0,5)}`;data.value=jornada.data;calcularHoras()}
 function paraDatetimeLocal(valor?:string){return valor?valor.slice(0,16):''}
-watch([data,jornadaInicio,jornadaFim],()=>{atualizarDia();calcularHoras()},{immediate:true})
+watch(data,atualizarDia,{immediate:true})
+watch([jornadaInicio,jornadaFim],calcularHoras)
+watch(horasTrabalhadas,valor=>{if(!jornadaInicio.value||!jornadaFim.value)horasTrabalhadasTexto.value=formatarDuracao(valor)})
+function aoSalvar(){if(tipo.value==='ENTRADA'){atualizarHorasManuais();if(erro.value)return;if((jornadaInicio.value&&!jornadaFim.value)||(!jornadaInicio.value&&jornadaFim.value)){erro.value='Informe início e fim da jornada, ou deixe os dois campos em branco.';return}}salvar()}
 function lerNota(evento:Event){const arquivo=(evento.target as HTMLInputElement).files?.[0];if(!arquivo)return;if(arquivo.size>5*1024*1024){erro.value='O arquivo deve ter no máximo 5 MB.';return}const leitor=new FileReader();leitor.onload=()=>notaFiscalBase64.value=String(leitor.result);leitor.readAsDataURL(arquivo);notaFiscalNome.value=arquivo.name;notaFiscalTipo.value=arquivo.type}
 async function baixarNotaAtual(){if(!edicao)return;try{const blob=tipo.value==='ENTRADA'?await receitaService.baixarNotaFiscal(String(route.params.id)):await despesaService.baixarNotaFiscal(String(route.params.id));const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=notaAtualNome.value;a.click();URL.revokeObjectURL(url)}catch(e:any){erro.value=e.userMessage||'Erro ao baixar nota fiscal.'}}
 async function apagarNotaAtual(){if(!confirm('Deseja apagar a nota fiscal?'))return;try{tipo.value==='ENTRADA'?await receitaService.apagarNotaFiscal(String(route.params.id)):await despesaService.apagarNotaFiscal(String(route.params.id));notaAtual.value=false;notaAtualNome.value=''}catch(e:any){erro.value=e.userMessage||'Erro ao apagar nota fiscal.'}}
