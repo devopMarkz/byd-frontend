@@ -35,7 +35,7 @@
             <div class="field"><label>Jornada - início</label><input v-model="jornadaInicio" type="datetime-local" /></div>
             <div class="field"><label>Jornada - fim</label><input v-model="jornadaFim" type="datetime-local" /></div>
           </div>
-          <div class="field"><label>Horas trabalhadas</label><input v-model="horasTrabalhadasTexto" inputmode="numeric" placeholder="HH:mm (ex.: 06:39)" @blur="atualizarHorasManuais" /></div>
+          <div class="field"><label>Horas trabalhadas</label><input v-model="horasTrabalhadasTexto" type="time" @change="atualizarHorasManuais" /></div>
           <div v-if="notaAtual" class="nota-atual">
             <p><strong>Nota fiscal:</strong> {{ notaAtualNome }}</p>
             <div class="acoes-nota">
