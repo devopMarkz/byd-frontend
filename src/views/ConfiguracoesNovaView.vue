@@ -68,15 +68,16 @@
     </main>
 
     <nav class="menu-inferior">
-      <router-link to="/"><span>⌂</span>Painel</router-link>
-      <router-link to="/transacoes"><span>↕</span>Transações</router-link>
-      <router-link to="/configuracoes" class="ativo"><span>⚙</span>Configurações</router-link>
+      <router-link to="/"><IconeApp nome="painel" />Painel</router-link>
+      <router-link to="/transacoes"><IconeApp nome="transacoes" />Transações</router-link>
+      <router-link to="/configuracoes" class="ativo"><IconeApp nome="configuracoes" />Configurações</router-link>
     </nav>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import IconeApp from '@/components/IconeApp.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 const auth = useAuthStore(), router = useRouter()
@@ -138,7 +139,7 @@ h1{margin:0;font-size:1.4rem;font-weight:700;letter-spacing:-.02em;color:var(--t
 
 .menu-inferior{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:.5rem .5rem calc(.5rem + env(safe-area-inset-bottom,0));background:color-mix(in oklab,var(--bg) 75%,transparent);border-top:1px solid var(--border);backdrop-filter:blur(14px);z-index:10}
 .menu-inferior a{flex:1;display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.5rem;text-decoration:none;color:var(--text-mute);font-size:.72rem;font-weight:600;border-radius:var(--radius);transition:all .2s}
-.menu-inferior a span{font-size:1.25rem}
+.menu-inferior a :deep(.icone-app){width:20px;height:20px}
 .menu-inferior .ativo{color:var(--accent)}
 @media(min-width:700px){.menu-inferior{left:50%;transform:translateX(-50%);max-width:520px;bottom:16px;border-radius:var(--radius);border:1px solid var(--border)}}
 </style>

@@ -21,12 +21,12 @@
         <h2>Cadastrados</h2>
         <div v-if="carregando" class="info"><span class="spinner-mute" /> Carregando...</div>
         <div v-else-if="veiculos.length === 0" class="vazio">
-          <span class="vazio-icon">🚗</span>
+          <span class="vazio-icon"><IconeApp nome="carro" :tamanho="30" /></span>
           <p>Nenhum veículo cadastrado ainda.</p>
         </div>
         <ul v-else class="lista">
           <li v-for="v in veiculos" :key="v.id" class="veic-item">
-            <div class="veic-icon">🚗</div>
+            <div class="veic-icon"><IconeApp nome="carro" :tamanho="26" /></div>
             <div class="veic-body">
               <div class="veic-title">{{ v.marca }} {{ v.modelo }}</div>
               <div class="veic-meta">
@@ -95,6 +95,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import IconeApp from '@/components/IconeApp.vue'
 import { useRouter } from 'vue-router'
 import { veiculoService } from '@/services/veiculoService'
 import type { VeiculoResponse } from '@/types'

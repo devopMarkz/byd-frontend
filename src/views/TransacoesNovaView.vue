@@ -79,16 +79,16 @@
               {{ moeda(tipo === 'R' ? item.custo : item.valor) }}
             </b>
             <div class="acoes">
-              <button class="ic-btn" @click.stop="editar(item)" title="Editar">✎</button>
+              <button class="ic-btn" @click.stop="editar(item)" title="Editar"><IconeApp nome="editar" :tamanho="16" /></button>
               <button v-if="tipo === 'S'" class="ic-btn" @click.stop="duplicar(item)" title="Duplicar">⎘</button>
-              <button v-if="item.possuiNotaFiscal" class="ic-btn" @click.stop="baixar(item)" title="Baixar NF">↓</button>
-              <button class="ic-btn danger" @click.stop="pedirExclusao(item)" title="Excluir">🗑</button>
+              <button v-if="item.possuiNotaFiscal" class="ic-btn" @click.stop="baixar(item)" title="Baixar NF"><IconeApp nome="baixar" :tamanho="16" /></button>
+              <button class="ic-btn danger" @click.stop="pedirExclusao(item)" title="Excluir"><IconeApp nome="excluir" :tamanho="16" /></button>
             </div>
           </div>
         </article>
 
         <div v-if="!itensExibidos.length" class="vazio">
-          <span class="vazio-icon">📭</span>
+          <span class="vazio-icon"><IconeApp nome="documento" :tamanho="28" /></span>
           <p>Nenhum lançamento no período.</p>
         </div>
       </section>
@@ -101,9 +101,9 @@
     </router-link>
 
     <nav class="menu-inferior">
-      <router-link to="/"><span>⌂</span>Painel</router-link>
-      <router-link to="/transacoes" class="ativo"><span>↕</span>Transações</router-link>
-      <router-link to="/configuracoes"><span>⚙</span>Configurações</router-link>
+      <router-link to="/"><IconeApp nome="painel" />Painel</router-link>
+      <router-link to="/transacoes" class="ativo"><IconeApp nome="transacoes" />Transações</router-link>
+      <router-link to="/configuracoes"><IconeApp nome="configuracoes" />Configurações</router-link>
     </nav>
 
     <!-- Modal de preview / detalhes -->
@@ -115,7 +115,7 @@
               <span class="modal-tag" :class="tagClasse">{{ rotuloTipo }}</span>
               <h2 id="preview-titulo">{{ formatar(preview.data) }}</h2>
             </div>
-            <button class="modal-close" @click="fecharPreview" title="Fechar" aria-label="Fechar">✕</button>
+            <button class="modal-close" @click="fecharPreview" title="Fechar" aria-label="Fechar"><IconeApp nome="fechar" :tamanho="16" /></button>
           </header>
 
           <div class="modal-valor" :class="{ saida: tipo === 'S' || tipo === 'R' }">
@@ -149,9 +149,9 @@
           </dl>
 
           <footer class="modal-acoes">
-            <button v-if="preview.possuiNotaFiscal" class="btn-sec" @click="baixar(preview)">↓ Baixar NF</button>
-            <button class="btn-sec" @click="editar(preview)">✎ Editar</button>
-            <button class="btn-danger" @click="pedirExclusao(preview)">🗑 Excluir</button>
+            <button v-if="preview.possuiNotaFiscal" class="btn-sec" @click="baixar(preview)"><IconeApp nome="baixar" :tamanho="16" />Baixar NF</button>
+            <button class="btn-sec" @click="editar(preview)"><IconeApp nome="editar" :tamanho="16" />Editar</button>
+            <button class="btn-danger" @click="pedirExclusao(preview)"><IconeApp nome="excluir" :tamanho="16" />Excluir</button>
           </footer>
         </div>
       </div>
@@ -161,7 +161,7 @@
     <transition name="modal">
       <div v-if="aExcluir" class="modal-backdrop" @click.self="cancelarExclusao">
         <div class="modal-card confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-titulo">
-          <div class="confirm-icon">🗑</div>
+          <div class="confirm-icon"><IconeApp nome="excluir" :tamanho="24" /></div>
           <h2 id="confirm-titulo">Excluir {{ rotuloExclusao }}?</h2>
           <p class="confirm-texto">Esta ação não pode ser desfeita.</p>
           <div class="confirm-resumo">
@@ -184,6 +184,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed, onUnmounted } from 'vue'
+import IconeApp from '@/components/IconeApp.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { receitaService } from '@/services/receitaService'
 import { despesaService } from '@/services/despesaService'
@@ -568,7 +569,7 @@ input[type="date"]:focus, select:focus { outline: none; border-color: var(--acce
   font-size: .72rem; font-weight: 600; border-radius: var(--radius);
   transition: all .2s;
 }
-.menu-inferior a span { font-size: 1.25rem; }
+.menu-inferior a :deep(.icone-app) { width: 20px; height: 20px; }
 .menu-inferior .ativo { color: var(--accent); }
 
 /* ---------- Modais ---------- */
@@ -635,6 +636,7 @@ input[type="date"]:focus, select:focus { outline: none; border-color: var(--acce
   font-weight: 700; font-size: .85rem; cursor: pointer;
   font-family: inherit; transition: all .2s;
 }
+.btn-sec, .btn-danger { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; }
 .btn-sec {
   background: rgba(212,255,58,.08);
   border: 1px solid rgba(212,255,58,.22);

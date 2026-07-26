@@ -6,7 +6,7 @@
           <span class="eyebrow"><span class="dot" /> Documento</span>
           <h2>Nota Fiscal</h2>
         </div>
-        <button @click="fechar" class="btn-fechar" aria-label="Fechar">✕</button>
+        <button @click="fechar" class="btn-fechar" aria-label="Fechar"><IconeApp nome="fechar" :tamanho="16" /></button>
       </header>
 
       <main>
@@ -14,19 +14,19 @@
           <img :src="notaFiscalUrl || ''" :alt="notaFiscalNome || 'Nota fiscal'" />
         </div>
         <div v-else-if="notaFiscalTipo?.includes('pdf')" class="preview-pdf">
-          <div class="preview-icon">📄</div>
+          <div class="preview-icon"><IconeApp nome="documento" :tamanho="28" /></div>
           <p>{{ notaFiscalNome || 'nota_fiscal.pdf' }}</p>
           <small>Arquivo PDF — Clique em baixar para visualizar</small>
         </div>
         <div v-else class="preview-vazio">
-          <div class="preview-icon">📎</div>
+          <div class="preview-icon"><IconeApp nome="anexo" :tamanho="28" /></div>
           <p>Sem nota fiscal anexada</p>
         </div>
       </main>
 
       <footer>
-        <button v-if="possuiNota" @click="baixar" class="btn-baixar">⬇ Baixar</button>
-        <button v-if="possuiNota && podeApagar" @click="apagar" class="btn-apagar">🗑 Apagar</button>
+        <button v-if="possuiNota" @click="baixar" class="btn-baixar"><IconeApp nome="baixar" :tamanho="16" />Baixar</button>
+        <button v-if="possuiNota && podeApagar" @click="apagar" class="btn-apagar"><IconeApp nome="excluir" :tamanho="16" />Apagar</button>
         <button @click="fechar" class="btn-cancelar">Fechar</button>
       </footer>
     </div>
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import IconeApp from '@/components/IconeApp.vue'
 const props = defineProps<{
   visivel: boolean
   notaFiscalNome?: string | null

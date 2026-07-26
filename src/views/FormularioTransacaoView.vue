@@ -39,8 +39,8 @@
           <div v-if="notaAtual" class="nota-atual">
             <p><strong>Nota fiscal:</strong> {{ notaAtualNome }}</p>
             <div class="acoes-nota">
-              <button type="button" class="secundario" @click="baixarNotaAtual">⬇ Baixar</button>
-              <button type="button" class="perigo" @click="apagarNotaAtual">🗑 Apagar</button>
+              <button type="button" class="secundario" @click="baixarNotaAtual"><IconeApp nome="baixar" :tamanho="16" />Baixar</button>
+              <button type="button" class="perigo" @click="apagarNotaAtual"><IconeApp nome="excluir" :tamanho="16" />Apagar</button>
             </div>
           </div>
           <div v-else class="field"><label>Comprovante</label><input accept="application/pdf,image/jpeg,image/png" type="file" @change="lerNota" /></div>
@@ -54,8 +54,8 @@
           <div v-if="notaAtual" class="nota-atual">
             <p><strong>Nota fiscal:</strong> {{ notaAtualNome }}</p>
             <div class="acoes-nota">
-              <button type="button" class="secundario" @click="baixarNotaAtual">⬇ Baixar</button>
-              <button type="button" class="perigo" @click="apagarNotaAtual">🗑 Apagar</button>
+              <button type="button" class="secundario" @click="baixarNotaAtual"><IconeApp nome="baixar" :tamanho="16" />Baixar</button>
+              <button type="button" class="perigo" @click="apagarNotaAtual"><IconeApp nome="excluir" :tamanho="16" />Apagar</button>
             </div>
           </div>
           <div v-else class="field"><label>Nota fiscal</label><input accept="application/pdf,image/jpeg,image/png" type="file" @change="lerNota" /></div>
@@ -72,6 +72,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import IconeApp from '@/components/IconeApp.vue'
 import { duracaoParaHoras, formatarDuracao } from '@/utils/duracao'
 import { origemService } from '@/services/origemService'; import { categoriaSaidaService } from '@/services/categoriaSaidaService'; import { formaPagamentoService } from '@/services/formaPagamentoService'; import { receitaService } from '@/services/receitaService'; import { despesaService } from '@/services/despesaService'; import { jornadaService } from '@/services/jornadaService'; import { dataAtualBrasil } from '@/utils/data'
 const router=useRouter(), route=useRoute(), edicao=Boolean(route.params.id), tipo=ref<'ENTRADA'|'SAIDA'>(route.query.tipo==='SAIDA'?'SAIDA':'ENTRADA'), data=ref(dataAtualBrasil()), diaSemana=ref(''), valor=ref<number>(), origemId=ref(''), quantidadeViagens=ref(0), quilometrosRodados=ref(0), horasTrabalhadas=ref(0), jornadaId=ref<string|null>(null), jornadaInicio=ref(''), jornadaFim=ref(''), categoriaSaidaId=ref(''), formaPagamentoId=ref(''), tipoGasto=ref('DIARIO_SEMANAL'), itemManutencao=ref(''), observacao=ref(''), notaFiscalBase64=ref<string|null>(null), notaFiscalNome=ref<string|null>(null), notaFiscalTipo=ref<string|null>(null), notaAtual=ref(false), notaAtualNome=ref(''), origens=ref<any[]>([]), categorias=ref<any[]>([]), formas=ref<any[]>([]), salvando=ref(false), erro=ref('')
@@ -129,7 +130,7 @@ input[type="file"]{padding:.55rem}
 .perigo{padding:.55rem 1rem;border:1px solid rgba(255,107,122,.35);border-radius:var(--radius);background:rgba(255,107,122,.08);color:var(--danger);font-weight:600;cursor:pointer;font-family:inherit}
 .nota-atual{padding:.9rem 1rem;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius)}
 .nota-atual p{margin:0 0 .6rem;font-size:.85rem;color:var(--text-dim)}
-.acoes-nota{display:flex;gap:.5rem}
+.acoes-nota{display:flex;gap:.5rem}.acoes-nota button{display:inline-flex;align-items:center;justify-content:center;gap:.35rem}
 .mensagem{margin:0;padding:.75rem .9rem;border-radius:var(--radius);font-size:.88rem;text-align:center}
 .mensagem.erro{color:var(--danger);background:rgba(255,107,122,.08);border:1px solid rgba(255,107,122,.25)}
 </style>

@@ -47,7 +47,7 @@
           <img v-if="secao === 'origens' && item.imagemBase64" :src="item.imagemBase64" alt="" />
           <span v-else-if="secao === 'origens'" class="avatar">{{ item.nome.charAt(0) }}</span>
           <div><strong>{{ item.nome }}</strong><small>{{ detalhe(item) }}</small></div>
-          <button class="acao" aria-label="Editar" @click="editar(item)">✎</button>
+          <button class="acao" aria-label="Editar" @click="editar(item)"><IconeApp nome="editar" :tamanho="16" /></button>
           <button
             class="acao excluir"
             aria-label="Excluir"
@@ -72,7 +72,7 @@
             aria-modal="true"
             aria-labelledby="confirm-titulo"
           >
-            <div class="confirm-icon">🗑</div>
+            <div class="confirm-icon"><IconeApp nome="excluir" :tamanho="24" /></div>
 
             <h2 id="confirm-titulo">
               Excluir {{ rotuloExclusao }}?
@@ -116,6 +116,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import IconeApp from '@/components/IconeApp.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { origemService } from '@/services/origemService'
 import { categoriaSaidaService } from '@/services/categoriaSaidaService'

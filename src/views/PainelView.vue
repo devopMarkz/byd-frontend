@@ -8,7 +8,7 @@
         <span class="eyebrow"><span class="dot" /> BYD Dolphin</span>
         <h1>Seu painel</h1>
       </div>
-      <button class="icone-botao" aria-label="Sair" @click="auth.logout">↪</button>
+      <button class="icone-botao" aria-label="Sair" @click="auth.logout"><IconeApp nome="sair" /></button>
     </header>
 
     <main class="conteudo">
@@ -82,19 +82,20 @@
     </main>
 
     <router-link to="/jornada" class="fab">
-      <span>🚗</span>{{ jornadaAberta ? 'Finalizar jornada' : 'Iniciar jornada' }}
+      <IconeApp nome="carro" :tamanho="18" />{{ jornadaAberta ? 'Finalizar jornada' : 'Iniciar jornada' }}
     </router-link>
 
     <nav class="menu-inferior">
-      <router-link to="/" class="ativo"><span>⌂</span>Painel</router-link>
-      <router-link to="/transacoes"><span>↕</span>Transações</router-link>
-      <router-link to="/configuracoes"><span>⚙</span>Configurações</router-link>
+      <router-link to="/" class="ativo"><IconeApp nome="painel" />Painel</router-link>
+      <router-link to="/transacoes"><IconeApp nome="transacoes" />Transações</router-link>
+      <router-link to="/configuracoes"><IconeApp nome="configuracoes" />Configurações</router-link>
     </nav>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import IconeApp from '@/components/IconeApp.vue'
 import { useAuthStore } from '@/stores/auth'
 import { dashboardService } from '@/services/dashboardService'
 import { jornadaService } from '@/services/jornadaService'
@@ -215,7 +216,7 @@ h1{margin:0;font-size:1.4rem;font-weight:700;letter-spacing:-.02em;color:var(--t
 .fab:hover{transform:translateY(-2px)}
 .menu-inferior{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:.5rem .5rem calc(.5rem + env(safe-area-inset-bottom,0));background:color-mix(in oklab,var(--bg) 75%,transparent);border-top:1px solid var(--border);backdrop-filter:blur(14px);z-index:10}
 .menu-inferior a{flex:1;display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.5rem;text-decoration:none;color:var(--text-mute);font-size:.72rem;font-weight:600;border-radius:var(--radius)}
-.menu-inferior a span{font-size:1.25rem}
+.menu-inferior a :deep(.icone-app){width:20px;height:20px}
 .menu-inferior .ativo{color:var(--accent)}
 @media(min-width:700px){
   .estatisticas{grid-template-columns:repeat(5,1fr)}

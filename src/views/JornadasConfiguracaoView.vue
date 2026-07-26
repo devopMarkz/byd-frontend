@@ -38,7 +38,7 @@
               aria-label="Editar jornada"
               @click="abrirEdicao(j)"
             >
-              ✎
+              <IconeApp nome="editar" :tamanho="16" />
             </button>
 
             <button
@@ -47,7 +47,7 @@
               aria-label="Excluir jornada"
               @click="pedirExclusao(j)"
             >
-              🗑
+              <IconeApp nome="excluir" :tamanho="16" />
             </button>
           </div>
         </div>
@@ -109,7 +109,7 @@
           aria-modal="true"
           aria-labelledby="confirm-titulo"
         >
-          <div class="confirm-icon">🗑</div>
+          <div class="confirm-icon"><IconeApp nome="excluir" :tamanho="24" /></div>
 
           <h2 id="confirm-titulo">
             Excluir esta jornada?
@@ -154,6 +154,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref, onUnmounted } from 'vue'
+import IconeApp from '@/components/IconeApp.vue'
 import { useRouter } from 'vue-router'
 import { jornadaService } from '@/services/jornadaService'
 import { formatarDataBrasileira } from '@/utils/data'

@@ -67,7 +67,7 @@
 
       <template v-else>
         <div class="hero-card">
-          <div class="hero-icon">🚗</div>
+          <div class="hero-icon"><IconeApp nome="carro" :tamanho="36" /></div>
           <div class="hero-txt">
             <span class="hero-label">Nenhuma jornada ativa</span>
             <p>Comece um novo turno para registrar suas corridas de hoje.</p>
@@ -122,6 +122,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import IconeApp from '@/components/IconeApp.vue'
 import { useRouter } from 'vue-router'
 import { jornadaService } from '@/services/jornadaService'
 import { veiculoService } from '@/services/veiculoService'
