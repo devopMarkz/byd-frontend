@@ -35,7 +35,7 @@
             <div class="field"><label>Jornada - início</label><input v-model="jornadaInicio" type="datetime-local" /></div>
             <div class="field"><label>Jornada - fim</label><input v-model="jornadaFim" type="datetime-local" /></div>
           </div>
-          <div class="field"><label>Horas trabalhadas</label><input v-model="horasTrabalhadasTexto" type="time" @change="atualizarHorasManuais" /></div>
+          <div class="field"><label>Horas trabalhadas</label><input v-model="horasTrabalhadasTexto" type="text" placeholder="HH:mm" maxlength="5" @input="formatarHorasInput" @blur="atualizarHorasManuais" /></div>
           <div v-if="notaAtual" class="nota-atual">
             <p><strong>Nota fiscal:</strong> {{ notaAtualNome }}</p>
             <div class="acoes-nota">
@@ -79,12 +79,12 @@ const router=useRouter(), route=useRoute(), edicao=Boolean(route.params.id), tip
 const horasTrabalhadasTexto=ref(formatarDuracao(0))
 function atualizarDia(){diaSemana.value=new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(new Date(`${data.value}T12:00:00`))}
 function calcularHoras(){if(!jornadaInicio.value||!jornadaFim.value)return;const diferenca=new Date(jornadaFim.value).getTime()-new Date(jornadaInicio.value).getTime();horasTrabalhadas.value=Math.max(0,Number((diferenca/3600000).toFixed(2)));horasTrabalhadasTexto.value=formatarDuracao(horasTrabalhadas.value)}
-function atualizarHorasManuais(){const horas=duracaoParaHoras(horasTrabalhadasTexto.value);if(horas===null){erro.value='Informe as horas no formato HH:mm, por exemplo 06:39.';horasTrabalhadasTexto.value=formatarDuracao(horasTrabalhadas.value);return}erro.value='';horasTrabalhadas.value=horas;horasTrabalhadasTexto.value=formatarDuracao(horas)}
-async function puxarUltimaJornada(){const lista=await jornadaService.listar();const jornada=lista.find(j=>j.status==='ENCERRADA'&&j.horarioFim);if(!jornada){erro.value='Nenhuma jornada encerrada encontrada.';return}jornadaId.value=jornada.id;jornadaInicio.value=`${jornada.data}T${jornada.horarioInicio.slice(0,5)}`;jornadaFim.value=`${jornada.data}T${jornada.horarioFim!.slice(0,5)}`;data.value=jornada.data;calcularHoras()}
+function formatarHorasInput(){let valor=horasTrabalhadasTexto.value.replace(/\D/g,'');if(valor.length>4)valor=valor.slice(0,4);if(valor.length>=3){horasTrabalhadasTexto.value=valor.slice(0,-2)+':'+valor.slice(-2)}else{horasTrabalhadasTexto.value=valor}}
+function atualizarHorasManuais(){const horas=duracaoParaHoras(horasTrabalhadasTexto.value);if(horas===null){erro.value='Informe as horas no formato HH:mm, por exemplo 06:39 ou 32:02.';horasTrabalhadasTexto.value=formatarDuracao(horasTrabalhadas.value);return}erro.value='';horasTrabalhadas.value=horas;horasTrabalhadasTexto.value=formatarDuracao(horas)}
+async function puxarUltimaJornada(){const lista=await jornadaService.listar();const jornada=lista.find(j=>j.status==='ENCERRADA'&&j.horarioFim);if(!jornada){erro.value='Nenhuma jornada encerrada encontrada.';return}jornadaId.value=jornada.id;jornadaInicio.value=`${jornada.data}T${jornada.horarioInicio.slice(0,5)}`;jornadaFim.value=`${jornada.data}T${jornada.horarioFim!.slice(0,5)}`;data.value=jornada.data;if(jornada.horasTrabalhadas!==undefined){horasTrabalhadas.value=jornada.horasTrabalhadas;horasTrabalhadasTexto.value=formatarDuracao(jornada.horasTrabalhadas)}else{calcularHoras()}}
 function paraDatetimeLocal(valor?:string){return valor?valor.slice(0,16):''}
 watch(data,atualizarDia,{immediate:true})
-watch([jornadaInicio,jornadaFim],calcularHoras)
-watch(horasTrabalhadas,valor=>{if(!jornadaInicio.value||!jornadaFim.value)horasTrabalhadasTexto.value=formatarDuracao(valor)})
+watch(horasTrabalhadas,valor=>{horasTrabalhadasTexto.value=formatarDuracao(valor)})
 function aoSalvar(){if(tipo.value==='ENTRADA'){atualizarHorasManuais();if(erro.value)return;if((jornadaInicio.value&&!jornadaFim.value)||(!jornadaInicio.value&&jornadaFim.value)){erro.value='Informe início e fim da jornada, ou deixe os dois campos em branco.';return}}salvar()}
 function lerNota(evento:Event){const arquivo=(evento.target as HTMLInputElement).files?.[0];if(!arquivo)return;if(arquivo.size>5*1024*1024){erro.value='O arquivo deve ter no máximo 5 MB.';return}const leitor=new FileReader();leitor.onload=()=>notaFiscalBase64.value=String(leitor.result);leitor.readAsDataURL(arquivo);notaFiscalNome.value=arquivo.name;notaFiscalTipo.value=arquivo.type}
 async function baixarNotaAtual(){if(!edicao)return;try{const blob=tipo.value==='ENTRADA'?await receitaService.baixarNotaFiscal(String(route.params.id)):await despesaService.baixarNotaFiscal(String(route.params.id));const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=notaAtualNome.value;a.click();URL.revokeObjectURL(url)}catch(e:any){erro.value=e.userMessage||'Erro ao baixar nota fiscal.'}}

@@ -42,6 +42,16 @@ export const jornadaService = {
     return response.data
   },
 
+  async iniciarParada(jornadaId: string): Promise<JornadaResponse> {
+    const response = await api.post<JornadaResponse>('/jornadas/iniciar-parada', { jornadaId })
+    return response.data
+  },
+
+  async retornarParada(jornadaId: string): Promise<JornadaResponse> {
+    const response = await api.post<JornadaResponse>('/jornadas/retornar-parada', { jornadaId })
+    return response.data
+  },
+
   async atualizar(id: string, request: AtualizarJornadaRequest): Promise<JornadaResponse> {
     const response = await api.put<JornadaResponse>(`/jornadas/${id}`, request)
     return response.data

@@ -246,6 +246,8 @@ export interface JornadaResponse {
   percentualBateriaInicial: number
   percentualBateriaFinal: number | null
   status: string
+  horarios?: string | null
+  horasTrabalhadas?: number
 }
 
 export interface VeiculoRequest {

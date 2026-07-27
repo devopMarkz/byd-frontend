@@ -17,23 +17,144 @@
     </header>
 
     <main class="conteudo">
-      <p class="descricao">{{ jornadaAberta ? 'Sua jornada está em andamento.' : 'Registre o início ao sair de casa.' }}</p>
-      <button class="acao" :class="{ encerrar: jornadaAberta }" :disabled="salvando" @click="executar">
-        <span>{{ salvando ? 'AGUARDE' : jornadaAberta ? 'ENCERRAR' : 'INICIAR' }}</span>
-      </button>
-      <small class="dica">{{ jornadaAberta ? 'A data e hora atuais serão registradas ao encerrar.' : 'A data e hora atuais serão registradas.' }}</small>
+      <p class="descricao">{{ estadoTexto }}</p>
+      
+      <template v-if="!jornadaAberta">
+        <button class="acao" :disabled="salvando" @click="iniciar">
+          <span>{{ salvando ? 'AGUARDE' : 'INICIAR' }}</span>
+        </button>
+        <small class="dica">A data e hora atuais serão registradas.</small>
+      </template>
+
+      <template v-else-if="emParada">
+        <button class="acao parada" :disabled="salvando" @click="retornar">
+          <span>{{ salvando ? 'AGUARDE' : 'RETORNAR' }}</span>
+        </button>
+        <small class="dica">Retorne da parada para continuar a jornada.</small>
+      </template>
+
+      <template v-else>
+        <div class="botoes-primarios">
+          <button class="acao secundario" :disabled="salvando" @click="fazerParada">
+            <span>{{ salvando ? 'AGUARDE' : 'FAZER PARADA' }}</span>
+          </button>
+          <button class="acao encerrar" :disabled="salvando" @click="encerrar">
+            <span>{{ salvando ? 'AGUARDE' : 'ENCERRAR' }}</span>
+          </button>
+        </div>
+        <small class="dica">Faça uma parada ou encerre a jornada.</small>
+      </template>
+
       <p v-if="mensagem" class="mensagem" :class="{ erro }">{{ mensagem }}</p>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { jornadaService } from '@/services/jornadaService'
-const router = useRouter(), jornadaAberta = ref(false), salvando = ref(false), mensagem = ref(''), erro = ref(false)
-async function carregar() { const jornadas = await jornadaService.listar(); jornadaAberta.value = jornadas.some(j => j.status === 'EM_ANDAMENTO') }
-async function executar() { salvando.value = true; mensagem.value = ''; erro.value = false; try { if (jornadaAberta.value) await jornadaService.encerrarAtual(); else await jornadaService.iniciarAgora(); await carregar(); mensagem.value = jornadaAberta.value ? 'Jornada iniciada.' : 'Jornada encerrada.' } catch (e: any) { erro.value = true; mensagem.value = e.userMessage || 'Não foi possível registrar a jornada.' } finally { salvando.value = false } }
+import type { JornadaResponse } from '@/types'
+
+const router = useRouter()
+const jornadaAtual = ref<JornadaResponse | null>(null)
+const salvando = ref(false)
+const mensagem = ref('')
+const erro = ref(false)
+
+const jornadaAberta = computed(() => jornadaAtual.value?.status === 'EM_ANDAMENTO')
+const emParada = computed(() => {
+  if (!jornadaAtual.value?.horarios) return false
+  try {
+    const eventos = JSON.parse(jornadaAtual.value.horarios)
+    return eventos.length > 0 && eventos[eventos.length - 1].tipo === 'INICIO_PARADA'
+  } catch {
+    return false
+  }
+})
+
+const estadoTexto = computed(() => {
+  if (!jornadaAberta.value) return 'Registre o início ao sair de casa.'
+  if (emParada.value) return 'Sua jornada está pausada.'
+  return 'Sua jornada está em andamento.'
+})
+
+async function carregar() {
+  try {
+    const jornadas = await jornadaService.listar()
+    jornadaAtual.value = jornadas.find(j => j.status === 'EM_ANDAMENTO') ?? null
+  } catch (e: any) {
+    erro.value = true
+    mensagem.value = e.userMessage || 'Erro ao carregar jornada'
+  }
+}
+
+async function iniciar() {
+  salvando.value = true
+  mensagem.value = ''
+  erro.value = false
+  try {
+    await jornadaService.iniciarAgora()
+    await carregar()
+    mensagem.value = 'Jornada iniciada!'
+  } catch (e: any) {
+    erro.value = true
+    mensagem.value = e.userMessage || 'Não foi possível iniciar a jornada'
+  } finally {
+    salvando.value = false
+  }
+}
+
+async function fazerParada() {
+  if (!jornadaAtual.value) return
+  salvando.value = true
+  mensagem.value = ''
+  erro.value = false
+  try {
+    await jornadaService.iniciarParada(jornadaAtual.value.id)
+    await carregar()
+    mensagem.value = 'Parada iniciada!'
+  } catch (e: any) {
+    erro.value = true
+    mensagem.value = e.userMessage || 'Não foi possível iniciar a parada'
+  } finally {
+    salvando.value = false
+  }
+}
+
+async function retornar() {
+  if (!jornadaAtual.value) return
+  salvando.value = true
+  mensagem.value = ''
+  erro.value = false
+  try {
+    await jornadaService.retornarParada(jornadaAtual.value.id)
+    await carregar()
+    mensagem.value = 'Retorno registrado!'
+  } catch (e: any) {
+    erro.value = true
+    mensagem.value = e.userMessage || 'Não foi possível retornar da parada'
+  } finally {
+    salvando.value = false
+  }
+}
+
+async function encerrar() {
+  salvando.value = true
+  mensagem.value = ''
+  erro.value = false
+  try {
+    await jornadaService.encerrarAtual()
+    await carregar()
+    mensagem.value = 'Jornada encerrada!'
+  } catch (e: any) {
+    erro.value = true
+    mensagem.value = e.userMessage || 'Não foi possível encerrar a jornada'
+  } finally {
+    salvando.value = false
+  }
+}
+
 onMounted(carregar)
 </script>
 
@@ -61,6 +182,12 @@ h1{margin:0;font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
 .acao:disabled{opacity:.7;cursor:not-allowed}
 .acao.encerrar{background:linear-gradient(180deg,var(--danger) 0%,#e04a5c 100%);color:#fff;box-shadow:0 20px 60px -12px rgba(255,107,122,.6),inset 0 2px 0 rgba(255,255,255,.2),0 0 0 12px rgba(255,107,122,.08)}
 .acao.encerrar:hover:not(:disabled){box-shadow:0 26px 72px -12px rgba(255,107,122,.75),inset 0 2px 0 rgba(255,255,255,.25),0 0 0 14px rgba(255,107,122,.1)}
+.acao.parada{background:linear-gradient(180deg,#ff9500 0%,#ff6b00 100%);color:#fff;box-shadow:0 20px 60px -12px rgba(255,149,0,.6),inset 0 2px 0 rgba(255,255,255,.2),0 0 0 12px rgba(255,149,0,.08)}
+.acao.parada:hover:not(:disabled){box-shadow:0 26px 72px -12px rgba(255,149,0,.75),inset 0 2px 0 rgba(255,255,255,.25),0 0 0 14px rgba(255,149,0,.1)}
+.acao.secundario{width:180px;height:180px;font-size:1.1rem;background:linear-gradient(180deg,#7cf5c4 0%,#5bc4a0 100%);color:#07090f;box-shadow:0 20px 60px -12px rgba(124,245,196,.6),inset 0 2px 0 rgba(255,255,255,.35),0 0 0 12px rgba(124,245,196,.08)}
+.acao.secundario:hover:not(:disabled){box-shadow:0 26px 72px -12px rgba(124,245,196,.75),inset 0 2px 0 rgba(255,255,255,.4),0 0 0 14px rgba(124,245,196,.1)}
+.botoes-primarios{display:flex;flex-direction:column;gap:1.5rem;align-items:center;justify-content:center}
+@media(min-width:768px){.botoes-primarios{flex-direction:row}}
 .dica{color:var(--text-mute);font-size:.78rem;max-width:280px}
 .mensagem{margin:0;padding:.75rem 1rem;border-radius:var(--radius);font-size:.88rem;color:var(--accent-2);background:rgba(124,245,196,.08);border:1px solid rgba(124,245,196,.25)}
 .mensagem.erro{color:var(--danger);background:rgba(255,107,122,.08);border-color:rgba(255,107,122,.25)}
