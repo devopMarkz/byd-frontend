@@ -654,6 +654,8 @@ h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; co
   padding: 1.1rem;
   max-width: 720px; margin: 0 auto;
   display: flex; flex-direction: column; gap: .9rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .abas {
@@ -676,7 +678,11 @@ h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; co
 .filtros { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
 .filtros.com-extra { grid-template-columns: 1fr 1fr 1fr; }
 @media (max-width: 560px) {
-  .filtros, .filtros.com-extra { grid-template-columns: 1fr; }
+  .filtros { grid-template-columns: 1fr 1fr; }
+  .filtros.com-extra { grid-template-columns: 1fr 1fr; }
+  .filtros.com-extra .field:nth-child(3) {
+    grid-column: 1 / -1;
+  }
 }
 .field { display: flex; flex-direction: column; gap: .3rem; }
 .field span {
