@@ -80,6 +80,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { driver } from 'driver.js'
 import 'driver.js/dist/driver.css'
+import '@/assets/driver-custom.css'
 import { useRoute, useRouter } from 'vue-router'
 import IconeApp from '@/components/IconeApp.vue'
 import { duracaoParaHoras, formatarDuracao } from '@/utils/duracao'
@@ -333,6 +334,10 @@ function iniciarTutorial() {
 
   const driverObj = driver({
     showProgress: true,
+    nextBtnText: 'Próximo',
+    prevBtnText: 'Anterior',
+    doneBtnText: 'Concluir',
+    closeBtnText: 'Fechar',
     steps
   })
 
@@ -349,8 +354,8 @@ function iniciarTutorial() {
 .glow-2{width:300px;height:300px;background:#7cf5c4;opacity:.07;bottom:-140px;right:-100px}
 .topbar{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.75rem;padding:1rem 1.1rem;background:color-mix(in oklab,var(--bg) 75%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
 .topbar-botoes{display:flex;align-items:center;gap:.5rem}
-.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:4px solid var(--accent);border-radius:8px;background:transparent;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
-.botao-tutorial:hover{background:rgba(212,255,58,.1);transform:scale(1.05)}
+.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:1px solid var(--accent);border-radius:8px;background:rgba(212,255,58,.08);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
+.botao-tutorial:hover{background:rgba(212,255,58,.15);transform:scale(1.05)}
 .botao-tutorial:active{transform:scale(.95)}
 .botao-tutorial svg{width:14px;height:14px;fill:var(--accent)}
 .voltar{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius);background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text);cursor:pointer}

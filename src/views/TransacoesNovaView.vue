@@ -194,6 +194,7 @@
 import { onMounted, ref, watch, computed, onUnmounted, nextTick } from 'vue'
 import { driver } from 'driver.js'
 import 'driver.js/dist/driver.css'
+import '@/assets/driver-custom.css'
 import IconeApp from '@/components/IconeApp.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { receitaService } from '@/services/receitaService'
@@ -400,6 +401,10 @@ const aguardarElemento = async (selector: string) => {
 function iniciarTutorialEntradas() {
   const driverObj = driver({
     showProgress: true,
+    nextBtnText: 'Próximo',
+    prevBtnText: 'Anterior',
+    doneBtnText: 'Concluir',
+    closeBtnText: 'Fechar',
     steps: [
       {
         element: '.abas button:nth-child(1)',
@@ -481,6 +486,10 @@ function iniciarTutorialEntradas() {
 function iniciarTutorialSaidas() {
   const driverObj = driver({
     showProgress: true,
+    nextBtnText: 'Próximo',
+    prevBtnText: 'Anterior',
+    doneBtnText: 'Concluir',
+    closeBtnText: 'Fechar',
     steps: [
       {
         element: '.filtros .field:nth-child(3) select',
@@ -535,6 +544,10 @@ function iniciarTutorialSaidas() {
 function iniciarTutorialRecargas() {
   const driverObj = driver({
     showProgress: true,
+    nextBtnText: 'Próximo',
+    prevBtnText: 'Anterior',
+    doneBtnText: 'Concluir',
+    closeBtnText: 'Fechar',
     steps: [
       {
         element: '.lista',
@@ -596,8 +609,8 @@ function iniciarTutorialTransacoes() {
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
 }
 .topbar-botoes{display:flex;align-items:center;gap:.5rem}
-.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:4px solid var(--accent);border-radius:8px;background:transparent;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
-.botao-tutorial:hover{background:rgba(212,255,58,.1);transform:scale(1.05)}
+.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:1px solid var(--accent);border-radius:8px;background:rgba(212,255,58,.08);color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
+.botao-tutorial:hover{background:rgba(212,255,58,.15);transform:scale(1.05)}
 .botao-tutorial:active{transform:scale(.95)}
 .botao-tutorial svg{width:14px;height:14px;fill:var(--accent)}
 .head-txt { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }

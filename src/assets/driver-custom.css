@@ -1,0 +1,98 @@
+/* Customização do Driver.js para seguir o tema do sistema */
+
+.driver-popover {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 320px;
+}
+
+.driver-popover-title {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.driver-popover-description {
+  color: var(--text-mute);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.driver-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.driver-popover-progress-text {
+  color: var(--text-mute);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.driver-popover-btn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-family: inherit;
+}
+
+.driver-popover-btn-close {
+  background: transparent;
+  color: var(--text-mute);
+}
+
+.driver-popover-btn-close:hover {
+  color: var(--text);
+}
+
+.driver-popover-btn-prev {
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.driver-popover-btn-prev:hover {
+  background: var(--border);
+}
+
+.driver-popover-btn-next {
+  background: linear-gradient(180deg, var(--accent) 0%, #b8e628 100%);
+  color: #07090f;
+  box-shadow: 0 4px 12px rgba(212, 255, 58, 0.3);
+}
+
+.driver-popover-btn-next:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(212, 255, 58, 0.4);
+}
+
+.driver-popover-arrow {
+  border-color: var(--surface) !important;
+}
+
+.driver-popover-arrow-side-left.driver-popover-arrow::before,
+.driver-popover-arrow-side-right.driver-popover-arrow::before {
+  border-color: var(--surface) !important;
+}
+
+.driver-active-element {
+  position: relative;
+  z-index: 10000;
+}
+
+.driver-overlay {
+  background: transparent;
+  backdrop-filter: none;
+}
