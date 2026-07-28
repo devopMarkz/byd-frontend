@@ -16,7 +16,7 @@
 }
 
 .driver-popover-description {
-  color: var(--text-mute);
+  color: var(--text);
   font-size: 0.85rem;
   line-height: 1.5;
   margin-bottom: 1rem;
