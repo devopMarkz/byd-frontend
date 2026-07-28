@@ -8,10 +8,18 @@
         <span class="eyebrow"><span class="dot" /> BYD Dolphin</span>
         <h1>Configurações</h1>
       </div>
+      <div class="topbar-botoes">
+        <button class="botao-tutorial" aria-label="Iniciar tutorial" @click="iniciarTutorial">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          Tutorial
+        </button>
+      </div>
     </header>
 
     <main class="conteudo">
-      <router-link to="/configuracoes/perfil" class="perfil">
+      <router-link to="/configuracoes/perfil" class="perfil" id="perfil">
         <div class="avatar">{{ inicial }}</div>
         <div class="perfil-txt">
           <strong>{{ auth.usuario?.email }}</strong>
@@ -21,32 +29,32 @@
       </router-link>
 
       <section class="opcoes">
-        <button @click="abrir('origens')">
+        <button id="categorias-entrada" @click="abrir('origens')">
           <span class="ic">◉</span>
           <div><strong>Categorias de entrada</strong><small>Origens de receita</small></div>
           <b>›</b>
         </button>
-        <button @click="abrir('categorias')">
+        <button id="categorias-saida" @click="abrir('categorias')">
           <span class="ic">▣</span>
           <div><strong>Categorias de saída</strong><small>Custos fixos e variáveis</small></div>
           <b>›</b>
         </button>
-        <button @click="abrir('formas')">
+        <button id="formas-pagamento" @click="abrir('formas')">
           <span class="ic">◈</span>
           <div><strong>Formas de pagamento</strong><small>Gerencie as opções de pagamento</small></div>
           <b>›</b>
         </button>
-        <router-link to="/configuracoes/jornadas">
+        <router-link id="jornadas" to="/configuracoes/jornadas">
           <span class="ic">◷</span>
           <div><strong>Jornadas</strong><small>Consulte o histórico operacional</small></div>
           <b>›</b>
         </router-link>
-        <router-link to="/personalizacoes">
+        <router-link id="personalizacoes" to="/personalizacoes">
           <span class="ic">ϟ</span>
           <div><strong>Personalizações</strong><small>Tarifa padrão de energia</small></div>
           <b>›</b>
         </router-link>
-        <button @click="mensagem='Disponível em uma futura versão.'">
+        <button id="metas" @click="mensagem='Disponível em uma futura versão.'">
           <span class="ic">⌁</span>
           <div><strong>Metas</strong><small>Em breve</small></div>
           <b>›</b>
@@ -58,7 +66,7 @@
           <strong>Tema escuro</strong>
           <small>Preferência salva neste dispositivo</small>
         </div>
-        <label class="switch">
+        <label class="switch" id="toggle-tema">
           <input v-model="escuro" type="checkbox" @change="salvarTema" />
           <span class="slider"></span>
         </label>
@@ -77,6 +85,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { driver } from 'driver.js'
+import 'driver.js/dist/driver.css'
 import IconeApp from '@/components/IconeApp.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
@@ -87,6 +97,88 @@ const inicial = computed(() => auth.usuario?.email?.charAt(0).toUpperCase() ?? '
 function aplicarTema(){document.documentElement.dataset.tema = escuro.value ? 'escuro' : 'claro'}
 function salvarTema(){localStorage.setItem('tema', escuro.value ? 'escuro' : 'claro');aplicarTema()}
 function abrir(secao: string){router.push({path:'/configuracoes/cadastros',query:{secao}})}
+
+function iniciarTutorial() {
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: '#perfil',
+        popover: {
+          title: 'Perfil do motorista',
+          description: 'Aqui você pode gerenciar seus dados pessoais e segurança da conta. Clique para editar nome e senha.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#categorias-entrada',
+        popover: {
+          title: 'Categorias de entrada',
+          description: 'Cadastre as plataformas de trabalho onde você recebe corridas (Uber, 99, InDrive, etc). Isso ajuda a saber quanto ganhou em cada plataforma.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#categorias-saida',
+        popover: {
+          title: 'Categorias de saída',
+          description: 'Cadastre os tipos de despesas do seu trabalho (manutenção, lavagem, alimentação, aluguel, etc). Organize seus custos em categorias para melhor controle financeiro.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#formas-pagamento',
+        popover: {
+          title: 'Formas de pagamento',
+          description: 'Cadastre as formas como você paga suas despesas (dinheiro, cartão, PIX, etc). Registra como você paga seus custos para controle financeiro.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#jornadas',
+        popover: {
+          title: 'Jornadas',
+          description: 'Visualize e gerencie todas as suas jornadas de trabalho (turnos). Permite ver histórico de turnos, editar horários e excluir jornadas.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#personalizacoes',
+        popover: {
+          title: 'Personalizações',
+          description: 'Configure a tarifa residencial de energia elétrica (R$/kWh) para cálculo automático de recargas. Isso serve como base para cálculos automáticos de custo de recarga.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#metas',
+        popover: {
+          title: 'Metas',
+          description: 'Funcionalidade futura para definir metas financeiras. Disponível em uma futura versão.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#toggle-tema',
+        popover: {
+          title: 'Tema escuro',
+          description: 'Alterne entre tema escuro e claro conforme sua preferência. A escolha é salva neste dispositivo.',
+          side: 'bottom',
+          align: 'center'
+        }
+      }
+    ]
+  })
+
+  driverObj.drive()
+}
 onMounted(aplicarTema)
 </script>
 
@@ -98,7 +190,12 @@ onMounted(aplicarTema)
 .glow-1{width:360px;height:360px;background:#d4ff3a;opacity:.09;top:-140px;left:-120px}
 .glow-2{width:300px;height:300px;background:#7cf5c4;opacity:.07;bottom:-140px;right:-100px}
 
-.topbar{position:sticky;top:0;z-index:10;padding:1rem 1.1rem;background:color-mix(in oklab,var(--bg) 75%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.topbar{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:1fr auto;align-items:center;gap:.75rem;padding:1rem 1.1rem;background:color-mix(in oklab,var(--bg) 75%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.topbar-botoes{display:flex;align-items:center;gap:.5rem}
+.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:4px solid var(--accent);border-radius:8px;background:transparent;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
+.botao-tutorial:hover{background:rgba(212,255,58,.1);transform:scale(1.05)}
+.botao-tutorial:active{transform:scale(.95)}
+.botao-tutorial svg{width:14px;height:14px;fill:var(--accent)}
 .head-txt{display:flex;flex-direction:column;gap:.15rem}
 .eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;color:var(--accent);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 1.6s ease-in-out infinite}

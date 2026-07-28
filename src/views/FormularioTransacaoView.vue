@@ -13,7 +13,14 @@
         <span class="eyebrow"><span class="dot" /> {{ tipo === 'ENTRADA' ? 'Entrada' : 'Saída' }}</span>
         <h1>{{ edicao ? 'Editar' : 'Nova' }} {{ tipo === 'ENTRADA' ? 'entrada' : 'saída' }}</h1>
       </div>
-      <span class="spacer" />
+      <div class="topbar-botoes">
+        <button class="botao-tutorial" aria-label="Iniciar tutorial" @click="iniciarTutorial">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          Tutorial
+        </button>
+      </div>
     </header>
 
     <main class="conteudo">
@@ -22,13 +29,13 @@
           <div class="field"><label>Data</label><input v-model="data" type="date" required /></div>
           <div class="field"><label>Dia da semana</label><input :value="diaSemana" disabled /></div>
         </div>
-        <div class="field"><label>Valor</label><input v-model.number="valor" type="number" step="0.01" min="0.01" required /></div>
+        <div class="field"><label>Valor</label><input id="valor" v-model.number="valor" type="number" step="0.01" min="0.01" required /></div>
 
         <template v-if="tipo === 'ENTRADA'">
-          <div class="field"><label>Origem</label><select v-model="origemId" required><option value="">Selecione</option><option v-for="origem in origens" :key="origem.id" :value="origem.id">{{ origem.nome }}</option></select></div>
+          <div class="field"><label>Origem</label><select id="origem" v-model="origemId" required><option value="">Selecione</option><option v-for="origem in origens" :key="origem.id" :value="origem.id">{{ origem.nome }}</option></select></div>
           <div class="row">
-            <div class="field"><label>Viagens</label><input v-model.number="quantidadeViagens" type="number" min="0" required /></div>
-            <div class="field"><label>KM rodados</label><input v-model.number="quilometrosRodados" type="number" step="0.1" min="0" required /></div>
+            <div class="field"><label>Viagens</label><input id="viagens" v-model.number="quantidadeViagens" type="number" min="0" required /></div>
+            <div class="field"><label>KM rodados</label><input id="km-rodados" v-model.number="quilometrosRodados" type="number" step="0.1" min="0" required /></div>
           </div>
           <button type="button" class="secundario" @click="puxarUltimaJornada">Puxar última jornada</button>
           <div class="row">
@@ -36,7 +43,7 @@
             <div class="field"><label>Jornada - fim</label><input v-model="jornadaFim" type="datetime-local" /></div>
           </div>
           <div class="field"><label>Horas trabalhadas</label><input v-model="horasTrabalhadasTexto" type="text" placeholder="HH:mm" maxlength="5" @input="formatarHorasInput" @blur="atualizarHorasManuais" /></div>
-          <div v-if="notaAtual" class="nota-atual">
+          <div v-if="notaAtual" class="nota-atual" id="nota-fiscal-entrada">
             <p><strong>Nota fiscal:</strong> {{ notaAtualNome }}</p>
             <div class="acoes-nota">
               <button type="button" class="secundario" @click="baixarNotaAtual"><IconeApp nome="baixar" :tamanho="16" />Baixar</button>
@@ -47,21 +54,21 @@
         </template>
 
         <template v-else>
-          <div class="field"><label>Categoria</label><select v-model="categoriaSaidaId" required><option value="">Selecione</option><option v-for="c in categorias" :key="c.id" :value="c.id">{{ c.nome }}</option></select></div>
-          <div class="field"><label>Tipo de gasto</label><select v-model="tipoGasto"><option value="DIARIO_SEMANAL">Diário/Semanal</option><option value="MENSAL_PONTUAL">Mensal/Pontual</option></select></div>
-          <div class="field"><label>Forma de pagamento</label><select v-model="formaPagamentoId"><option value="">Não informada</option><option v-for="f in formas" :key="f.id" :value="f.id">{{ f.nome }}</option></select></div>
-          <div class="field"><label>Item de manutenção</label><input v-model="itemManutencao" /></div>
-          <div v-if="notaAtual" class="nota-atual">
+          <div class="field"><label>Categoria</label><select id="categoria" v-model="categoriaSaidaId" required><option value="">Selecione</option><option v-for="c in categorias" :key="c.id" :value="c.id">{{ c.nome }}</option></select></div>
+          <div class="field"><label>Tipo de gasto</label><select id="tipo-gasto" v-model="tipoGasto"><option value="DIARIO_SEMANAL">Diário/Semanal</option><option value="MENSAL_PONTUAL">Mensal/Pontual</option></select></div>
+          <div class="field"><label>Forma de pagamento</label><select id="forma-pagamento" v-model="formaPagamentoId"><option value="">Não informada</option><option v-for="f in formas" :key="f.id" :value="f.id">{{ f.nome }}</option></select></div>
+          <div class="field"><label>Item de manutenção</label><input id="item-manutencao" v-model="itemManutencao" /></div>
+          <div v-if="notaAtual" class="nota-atual" id="nota-fiscal-despesa">
             <p><strong>Nota fiscal:</strong> {{ notaAtualNome }}</p>
             <div class="acoes-nota">
               <button type="button" class="secundario" @click="baixarNotaAtual"><IconeApp nome="baixar" :tamanho="16" />Baixar</button>
               <button type="button" class="perigo" @click="apagarNotaAtual"><IconeApp nome="excluir" :tamanho="16" />Apagar</button>
             </div>
           </div>
-          <div v-else class="field"><label>Nota fiscal</label><input accept="application/pdf,image/jpeg,image/png" type="file" @change="lerNota" /></div>
+          <div v-else class="field"><label>Nota fiscal</label><input id="nota-fiscal-despesa" accept="application/pdf,image/jpeg,image/png" type="file" @change="lerNota" /></div>
         </template>
 
-        <div class="field"><label>Observação</label><textarea v-model="observacao" rows="3" /></div>
+        <div class="field"><label>Observação</label><textarea v-model="observacao" rows="3" id="observacao" /></div>
         <p v-if="erro" class="mensagem erro">{{ erro }}</p>
         <button class="salvar" :disabled="salvando">{{ salvando ? 'Salvando...' : 'Salvar' }}</button>
       </form>
@@ -71,6 +78,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
+import { driver } from 'driver.js'
+import 'driver.js/dist/driver.css'
 import { useRoute, useRouter } from 'vue-router'
 import IconeApp from '@/components/IconeApp.vue'
 import { duracaoParaHoras, formatarDuracao } from '@/utils/duracao'
@@ -91,6 +100,244 @@ async function baixarNotaAtual(){if(!edicao)return;try{const blob=tipo.value==='
 async function apagarNotaAtual(){if(!confirm('Deseja apagar a nota fiscal?'))return;try{tipo.value==='ENTRADA'?await receitaService.apagarNotaFiscal(String(route.params.id)):await despesaService.apagarNotaFiscal(String(route.params.id));notaAtual.value=false;notaAtualNome.value=''}catch(e:any){erro.value=e.userMessage||'Erro ao apagar nota fiscal.'}}
 onMounted(async()=>{[origens.value,categorias.value,formas.value]=await Promise.all([origemService.listar(),categoriaSaidaService.listar(),formaPagamentoService.listar()]);const registro=route.query.dados?JSON.parse(String(route.query.dados)):null;if(registro){data.value=registro.data;valor.value=registro.valor;origemId.value=registro.origemId||'';categoriaSaidaId.value=registro.categoriaSaidaId||'';formaPagamentoId.value=registro.formaPagamentoId||'';observacao.value=registro.observacao||'';quantidadeViagens.value=registro.quantidadeViagens||0;quilometrosRodados.value=registro.quilometrosRodados||0;horasTrabalhadas.value=registro.horasTrabalhadas||0;jornadaId.value=registro.jornadaId||null;tipoGasto.value=registro.tipoGasto||'DIARIO_SEMANAL';itemManutencao.value=registro.itemManutencao||'';notaAtual.value=registro.possuiNotaFiscal||false;notaAtualNome.value=registro.notaFiscalNome||'nota_fiscal';if(registro.dataHoraInicio){jornadaInicio.value=paraDatetimeLocal(registro.dataHoraInicio)}else if(registro.data&&registro.horario){jornadaInicio.value=`${registro.data}T${registro.horario.slice(0,5)}`}if(registro.dataHoraFim){jornadaFim.value=paraDatetimeLocal(registro.dataHoraFim)}else if(jornadaInicio.value&&registro.horasTrabalhadas){const inicioMs=new Date(jornadaInicio.value).getTime();jornadaFim.value=new Date(inicioMs+registro.horasTrabalhadas*3600000).toISOString().slice(0,16)}}})
 async function salvar(){if(!valor.value)return;salvando.value=true;erro.value='';try{if(tipo.value==='ENTRADA'){const horario=jornadaInicio.value?jornadaInicio.value.split('T')[1].slice(0,5)+':00':'12:00:00';const dados:any={valor:valor.value,data:data.value,horario:horario,dataHoraInicio:jornadaInicio.value,dataHoraFim:jornadaFim.value,origemId:origemId.value,jornadaId:jornadaId.value,diaSemana:diaSemana.value,quantidadeViagens:quantidadeViagens.value,quilometrosRodados:quilometrosRodados.value,horasTrabalhadas:horasTrabalhadas.value,notaFiscalBase64:notaFiscalBase64.value,notaFiscalNome:notaFiscalNome.value,notaFiscalTipo:notaFiscalTipo.value,observacao:observacao.value||null};edicao?await receitaService.atualizar(String(route.params.id),dados):await receitaService.registrar(dados)}else{const dados:any={valor:valor.value,data:data.value,categoriaSaidaId:categoriaSaidaId.value,formaPagamentoId:formaPagamentoId.value||null,diaSemana:diaSemana.value,tipoGasto:tipoGasto.value,itemManutencao:itemManutencao.value||null,notaFiscalBase64:notaFiscalBase64.value,notaFiscalNome:notaFiscalNome.value,notaFiscalTipo:notaFiscalTipo.value,observacao:observacao.value||null};edicao?await despesaService.atualizar(String(route.params.id),dados):await despesaService.registrar(dados)}router.replace({path:'/transacoes',query:{tipo:tipo.value==='ENTRADA'?'E':'S'}})}catch(e:any){erro.value=e.userMessage||'Erro ao salvar.'}finally{salvando.value=false}}
+
+function iniciarTutorial() {
+  const steps = tipo.value === 'ENTRADA' ? [
+    {
+      element: '.voltar',
+      popover: {
+        title: 'Voltar',
+        description: 'Clique para voltar para a lista de transações.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .field:nth-child(1) input',
+      popover: {
+        title: 'Data',
+        description: 'Selecione a data em que recebeu o valor.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .field:nth-child(2) input',
+      popover: {
+        title: 'Dia da semana',
+        description: 'Calculado automaticamente a partir da data selecionada.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#valor',
+      popover: {
+        title: 'Valor',
+        description: 'Digite o valor total recebido das plataformas de trabalho (ganho bruto).',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#origem',
+      popover: {
+        title: 'Origem',
+        description: 'Selecione a plataforma de trabalho (Uber, 99, etc) onde recebeu o valor.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#viagens',
+      popover: {
+        title: 'Viagens',
+        description: 'Digite o número de corridas realizadas neste período.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#km-rodados',
+      popover: {
+        title: 'KM rodados',
+        description: 'Digite a distância total percorrida em quilômetros.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .secundario',
+      popover: {
+        title: 'Puxar última jornada',
+        description: 'Clique para preencher automaticamente com os dados da última jornada encerrada (data, horários, horas).',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .row:nth-child(6) .field:nth-child(1) input',
+      popover: {
+        title: 'Jornada - início',
+        description: 'Selecione o horário exato que começou a trabalhar. Opcional, mas recomendado para cálculos precisos.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .row:nth-child(6) .field:nth-child(2) input',
+      popover: {
+        title: 'Jornada - fim',
+        description: 'Selecione o horário exato que parou de trabalhar. O sistema calculará automaticamente as horas trabalhadas.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .field:nth-child(7) input',
+      popover: {
+        title: 'Horas trabalhadas',
+        description: 'Formato HH:mm. O sistema calcula automaticamente a partir de início e fim, mas você pode editar manualmente.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .field:nth-child(8) input',
+      popover: {
+        title: 'Comprovante',
+        description: 'Anexe a nota fiscal ou comprovante da receita (opcional). Máximo 5 MB.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#observacao',
+      popover: {
+        title: 'Observação',
+        description: 'Adicione notas sobre esta receita (opcional).',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .salvar',
+      popover: {
+        title: 'Salvar',
+        description: 'Clique para registrar esta receita no sistema.',
+        side: 'top',
+        align: 'center'
+      }
+    }
+  ] : [
+    {
+      element: '.voltar',
+      popover: {
+        title: 'Voltar',
+        description: 'Clique para voltar para a lista de transações.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .field:nth-child(1) input',
+      popover: {
+        title: 'Data',
+        description: 'Selecione a data em que ocorreu a despesa.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .field:nth-child(2) input',
+      popover: {
+        title: 'Dia da semana',
+        description: 'Calculado automaticamente a partir da data selecionada.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#valor',
+      popover: {
+        title: 'Valor',
+        description: 'Digite o valor da despesa.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#categoria',
+      popover: {
+        title: 'Categoria',
+        description: 'Selecione o tipo de despesa (manutenção, lavagem, alimentação, etc).',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#tipo-gasto',
+      popover: {
+        title: 'Tipo de gasto',
+        description: 'Selecione se é um gasto diário/semanal (recorrente) ou mensal/pontual (ocasional).',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#forma-pagamento',
+      popover: {
+        title: 'Forma de pagamento',
+        description: 'Selecione como pagou a despesa (dinheiro, cartão, PIX, etc). Opcional.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#item-manutencao',
+      popover: {
+        title: 'Item de manutenção',
+        description: 'Descreva o que foi reparado ou trocado (apenas para manutenções). Opcional.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#nota-fiscal-despesa',
+      popover: {
+        title: 'Nota fiscal',
+        description: 'Anexe a nota fiscal ou comprovante da despesa (opcional). Máximo 5 MB.',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '#observacao',
+      popover: {
+        title: 'Observação',
+        description: 'Adicione notas sobre esta despesa (opcional).',
+        side: 'bottom',
+        align: 'center'
+      }
+    },
+    {
+      element: '.formulario .salvar',
+      popover: {
+        title: 'Salvar',
+        description: 'Clique para registrar esta despesa no sistema.',
+        side: 'top',
+        align: 'center'
+      }
+    }
+  ]
+
+  const driverObj = driver({
+    showProgress: true,
+    steps
+  })
+
+  driverObj.drive()
+}
 </script>
 
 
@@ -101,6 +348,11 @@ async function salvar(){if(!valor.value)return;salvando.value=true;erro.value=''
 .glow-1{width:360px;height:360px;background:#d4ff3a;opacity:.09;top:-140px;left:-120px}
 .glow-2{width:300px;height:300px;background:#7cf5c4;opacity:.07;bottom:-140px;right:-100px}
 .topbar{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.75rem;padding:1rem 1.1rem;background:color-mix(in oklab,var(--bg) 75%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.topbar-botoes{display:flex;align-items:center;gap:.5rem}
+.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:4px solid var(--accent);border-radius:8px;background:transparent;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
+.botao-tutorial:hover{background:rgba(212,255,58,.1);transform:scale(1.05)}
+.botao-tutorial:active{transform:scale(.95)}
+.botao-tutorial svg{width:14px;height:14px;fill:var(--accent)}
 .voltar{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius);background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text);cursor:pointer}
 .voltar:hover{border-color:var(--accent);color:var(--accent)}
 .voltar svg{width:18px;height:18px}

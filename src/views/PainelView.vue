@@ -8,7 +8,15 @@
         <span class="eyebrow"><span class="dot" /> BYD Dolphin</span>
         <h1>Seu painel</h1>
       </div>
-      <button class="icone-botao" aria-label="Sair" @click="auth.logout"><IconeApp nome="sair" /></button>
+      <div class="topbar-botoes">
+        <button class="botao-tutorial" aria-label="Iniciar tutorial" @click="iniciarTutorialPainel">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          Tutorial
+        </button>
+        <button class="icone-botao" aria-label="Sair" @click="auth.logout"><IconeApp nome="sair" /></button>
+      </div>
     </header>
 
     <main class="conteudo">
@@ -54,7 +62,7 @@
 
         <section class="secao">
           <div class="titulo-secao"><h2>Receita por origem</h2><span>{{ moeda(painel.receita) }}</span></div>
-          <div v-if="painel.receitasPorOrigem.length" class="origens">
+          <div v-if="painel.receitasPorOrigem.length" class="origens" id="receitas-por-origem">
             <article v-for="origem in painel.receitasPorOrigem" :key="origem.id" class="origem">
               <div class="origem-cabecalho">
                 <img v-if="origem.imagemBase64" :src="origem.imagemBase64" :alt="origem.nome" />
@@ -70,7 +78,7 @@
 
         <section class="secao">
           <div class="titulo-secao"><h2>Última jornada</h2></div>
-          <div v-if="painel.ultimaJornada" class="jornada-resumo">
+          <div v-if="painel.ultimaJornada" class="jornada-resumo" id="ultima-jornada">
             <div><span>Início</span><strong>{{ formatarData(painel.ultimaJornada.data) }} · {{ horario(painel.ultimaJornada.inicio) }}</strong></div>
             <div><span>Fim</span><strong>{{ painel.ultimaJornada.fim ? horario(painel.ultimaJornada.fim) : 'Em andamento' }}</strong></div>
             <div><span>Horas</span><strong>{{ formatarDuracao(painel.ultimaJornada.horasTrabalhadas) }}</strong></div>
@@ -95,6 +103,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { driver } from 'driver.js'
+import 'driver.js/dist/driver.css'
 import IconeApp from '@/components/IconeApp.vue'
 import { useAuthStore } from '@/stores/auth'
 import { dashboardService } from '@/services/dashboardService'
@@ -149,6 +159,187 @@ async function carregar() {
   } catch (e: any) { erro.value = e.userMessage || 'Não foi possível carregar o painel.' }
   finally { carregando.value = false }
 }
+function iniciarTutorialPainel() {
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: 'nav.menu-inferior a[href="/"]',
+        popover: {
+          title: 'Menu - Painel',
+          description: 'Aqui você vê o resumo financeiro, estatísticas detalhadas e o controle de jornada.',
+          side: 'top',
+          align: 'center'
+        }
+      },
+      {
+        element: 'nav.menu-inferior a[href="/transacoes"]',
+        popover: {
+          title: 'Menu - Transações',
+          description: 'Aqui você registra entradas (receitas), saídas (despesas) e recargas de energia.',
+          side: 'top',
+          align: 'center'
+        }
+      },
+      {
+        element: 'nav.menu-inferior a[href="/configuracoes"]',
+        popover: {
+          title: 'Menu - Configurações',
+          description: 'Aqui você cadastra categorias de gastos, plataformas onde trabalha (origens), formas de pagamento, verifica histórico de jornadas e configura suas preferências do sistema.',
+          side: 'top',
+          align: 'center'
+        }
+      },
+      {
+        element: '.periodo .abas button',
+        popover: {
+          title: 'Seleção de Período',
+          description: 'Escolha entre Diário, Semanal, Mensal, Anual ou Personalizado para analisar seus dados em diferentes escalas de tempo.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.resumo .cartao:nth-child(1)',
+        popover: {
+          title: 'Receita (Ganho Bruto)',
+          description: 'Este é o valor total que você recebeu das plataformas antes de descontar qualquer despesa.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.resumo .cartao:nth-child(2)',
+        popover: {
+          title: 'Despesas',
+          description: 'Este é o valor total de todos os seus custos (energia, manutenção, lavagem, etc).',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.resumo .cartao:nth-child(3)',
+        popover: {
+          title: 'Saldo (Ganho Líquido)',
+          description: 'Este é o valor que realmente sobrou no seu bolso: Receita - Despesas.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(1)',
+        popover: {
+          title: 'Viagens',
+          description: 'Número total de corridas realizadas no período. Conta todas as viagens registradas nas entradas.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(2)',
+        popover: {
+          title: 'Horas Trabalhadas',
+          description: 'Tempo total trabalhado no período, calculado somando as horas de todas as jornadas.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(3)',
+        popover: {
+          title: 'Quilômetros Rodados',
+          description: 'Distância total percorrida em quilômetros. Importante para calcular custo por KM e desgaste do veículo.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(4)',
+        popover: {
+          title: 'R$/viagem (Ganho Bruto)',
+          description: 'Quanto você ganha em média por cada corrida antes de descontar despesas. Calculado: Receita total ÷ Número de viagens.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(5)',
+        popover: {
+          title: 'R$/hora (Ganho Bruto)',
+          description: 'Quanto você ganha em média por cada hora trabalhada antes de descontar despesas. Calculado: Receita total ÷ Horas trabalhadas.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(6)',
+        popover: {
+          title: 'R$/KM (Ganho Bruto)',
+          description: 'Quanto você ganha em média por quilômetro rodado antes de descontar despesas. Calculado: Receita total ÷ Quilômetros rodados.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(7)',
+        popover: {
+          title: 'Lucro/viagem (Ganho Líquido)',
+          description: 'Quanto realmente sobra no bolso por cada corrida após descontar despesas. Calculado: (Receita - Despesas) ÷ Número de viagens.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(8)',
+        popover: {
+          title: 'Lucro/hora (Ganho Líquido)',
+          description: 'Quanto realmente sobra no bolso por cada hora trabalhada após descontar despesas. Calculado: (Receita - Despesas) ÷ Horas trabalhadas.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.estatisticas div:nth-child(9)',
+        popover: {
+          title: 'Lucro/KM (Ganho Líquido)',
+          description: 'Quanto realmente sobra no bolso por quilômetro rodado após descontar despesas. Calculado: (Receita - Despesas) ÷ Quilômetros rodados.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#receitas-por-origem',
+        popover: {
+          title: 'Receita por Origem',
+          description: 'Veja quanto ganhou em cada plataforma (Uber, 99, etc) e identifique qual é mais rentável.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '#ultima-jornada',
+        popover: {
+          title: 'Última Jornada',
+          description: 'Acompanhe rapidamente sua última atividade e veja se há uma jornada em andamento.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.fab',
+        popover: {
+          title: 'Controle de Jornada',
+          description: 'Use este botão para iniciar ou encerrar seu turno de trabalho rapidamente.',
+          side: 'left',
+          align: 'center'
+        }
+      }
+    ]
+  })
+
+  driverObj.drive()
+}
+
 onMounted(async () => { await Promise.all([carregar(), jornadaService.listar().then(lista => { jornadaAberta.value = lista.some(j => j.status === 'EM_ANDAMENTO') })]) })
 </script>
 
@@ -165,6 +356,11 @@ onMounted(async () => { await Promise.all([carregar(), jornadaService.listar().t
 .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
 h1{margin:0;font-size:1.4rem;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.topbar-botoes{display:flex;align-items:center;gap:.5rem}
+.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:4px solid var(--accent);border-radius:8px;background:transparent;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
+.botao-tutorial:hover{background:rgba(212,255,58,.1);transform:scale(1.05)}
+.botao-tutorial:active{transform:scale(.95)}
+.botao-tutorial svg{width:14px;height:14px;fill:var(--accent)}
 .icone-botao{width:40px;height:40px;display:grid;place-items:center;border-radius:var(--radius);background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text);cursor:pointer;font-size:1.15rem;flex-shrink:0}
 .icone-botao:hover{border-color:var(--accent);color:var(--accent)}
 .conteudo{position:relative;z-index:1;padding:1.25rem 1.1rem;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:1rem}

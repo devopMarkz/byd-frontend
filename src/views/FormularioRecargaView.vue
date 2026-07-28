@@ -13,7 +13,14 @@
         <span class="eyebrow"><span class="dot" /> Energia</span>
         <h1>{{ modoEdicao ? 'Editar recarga' : 'Nova recarga' }}</h1>
       </div>
-      <span class="spacer" />
+      <div class="topbar-botoes">
+        <button class="botao-tutorial" aria-label="Iniciar tutorial" @click="iniciarTutorial">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          Tutorial
+        </button>
+      </div>
     </header>
 
     <main class="conteudo">
@@ -50,18 +57,18 @@
         <div class="row">
           <div class="field">
             <label>Valor (R$)</label>
-            <input v-model.number="valor" type="number" min="0.01" step="0.01" required @input="onValorManual" />
+            <input id="valor" v-model.number="valor" type="number" min="0.01" step="0.01" required @input="onValorManual" />
           </div>
           <div class="field">
             <label>kWh consumidos</label>
-            <input v-model.number="kwh" type="number" min="0.01" step="0.001" required @input="onKwhManual" />
+            <input id="kwh-consumidos" v-model.number="kwh" type="number" min="0.01" step="0.001" required @input="onKwhManual" />
           </div>
         </div>
         <div class="field">
           <label>Local</label>
-          <select v-model="local"><option>Casa</option><option>Rua</option><option>Shopping</option><option>Trabalho</option><option>Outro</option></select>
+          <select id="local" v-model="local"><option>Casa</option><option>Rua</option><option>Shopping</option><option>Trabalho</option><option>Outro</option></select>
         </div>
-        <div class="field"><label>Observação</label><textarea v-model="observacao" rows="3" /></div>
+        <div class="field"><label>Observação</label><textarea id="observacao" v-model="observacao" rows="3" /></div>
         <p v-if="erro" class="mensagem erro">{{ erro }}</p>
         <button class="salvar" :disabled="salvando">{{ salvando ? 'Salvando...' : (modoEdicao ? 'Atualizar recarga' : 'Salvar recarga') }}</button>
       </form>
@@ -71,6 +78,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { driver } from 'driver.js'
+import 'driver.js/dist/driver.css'
 import { useRoute, useRouter } from 'vue-router'
 import { recargaService } from '@/services/recargaService'
 import { configuracaoService } from '@/services/configuracaoService'
@@ -163,6 +172,124 @@ async function salvar() {
     salvando.value = false
   }
 }
+
+function iniciarTutorial() {
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: '.voltar',
+        popover: {
+          title: 'Voltar',
+          description: 'Clique para voltar para a lista de transações.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.formulario .row:nth-child(1) .field:nth-child(1) input',
+        popover: {
+          title: 'Data',
+          description: 'Selecione a data em que realizou a recarga.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.formulario .row:nth-child(1) .field:nth-child(2) input',
+        popover: {
+          title: 'Dia da semana',
+          description: 'Calculado automaticamente a partir da data selecionada.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.secao',
+        popover: {
+          title: 'Cálculo automático',
+          description: 'Preencha os 3 campos (potência, horas, tarifa) para calcular automaticamente o valor e kWh. Ou edite manualmente os campos abaixo.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.row-3 .field:nth-child(1) input',
+        popover: {
+          title: 'Potência (kW)',
+          description: 'Digite a potência do carregador em kW (ex: 7.4 para carregamento rápido, 3.3 para normal).',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.row-3 .field:nth-child(2) input',
+        popover: {
+          title: 'Horas carregando',
+          description: 'Digite quanto tempo o veículo ficou carregando em horas (ex: 4 para 4 horas).',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.row-3 .field:nth-child(3) input',
+        popover: {
+          title: 'Tarifa (R$/kWh)',
+          description: 'Preço por kWh de energia. Preenchido automaticamente com o valor salvo em Personalizações, mas você pode editar.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#valor',
+        popover: {
+          title: 'Valor (R$)',
+          description: 'Custo total da recarga. Calculado automaticamente (kWh × tarifa), mas você pode editar manualmente.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#kwh-consumidos',
+        popover: {
+          title: 'kWh consumidos',
+          description: 'Quantidade de energia carregada em kWh. Calculado automaticamente (potência × horas), mas você pode editar manualmente.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#local',
+        popover: {
+          title: 'Local',
+          description: 'Selecione onde realizou a recarga (casa, rua, shopping, trabalho ou outro).',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '#observacao',
+        popover: {
+          title: 'Observação',
+          description: 'Adicione notas sobre esta recarga (opcional).',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.formulario .salvar',
+        popover: {
+          title: 'Salvar',
+          description: 'Clique para registrar esta recarga no sistema.',
+          side: 'top',
+          align: 'center'
+        }
+      }
+    ]
+  })
+
+  driverObj.drive()
+}
 </script>
 
 
@@ -173,6 +300,11 @@ async function salvar() {
 .glow-1{width:360px;height:360px;background:#d4ff3a;opacity:.09;top:-140px;left:-120px}
 .glow-2{width:300px;height:300px;background:#7cf5c4;opacity:.07;bottom:-140px;right:-100px}
 .topbar{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.75rem;padding:1rem 1.1rem;background:color-mix(in oklab,var(--bg) 75%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.topbar-botoes{display:flex;align-items:center;gap:.5rem}
+.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:4px solid var(--accent);border-radius:8px;background:transparent;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
+.botao-tutorial:hover{background:rgba(212,255,58,.1);transform:scale(1.05)}
+.botao-tutorial:active{transform:scale(.95)}
+.botao-tutorial svg{width:14px;height:14px;fill:var(--accent)}
 .voltar{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:var(--radius);background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text);cursor:pointer}
 .voltar:hover{border-color:var(--accent);color:var(--accent)}
 .voltar svg{width:18px;height:18px}

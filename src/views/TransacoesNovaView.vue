@@ -8,6 +8,14 @@
         <span class="eyebrow"><span class="dot" /> BYD Dolphin</span>
         <h1>Transações</h1>
       </div>
+      <div class="topbar-botoes">
+        <button class="botao-tutorial" aria-label="Iniciar tutorial" @click="iniciarTutorialTransacoes">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          Tutorial
+        </button>
+      </div>
     </header>
 
     <main class="conteudo">
@@ -183,7 +191,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, computed, onUnmounted } from 'vue'
+import { onMounted, ref, watch, computed, onUnmounted, nextTick } from 'vue'
+import { driver } from 'driver.js'
+import 'driver.js/dist/driver.css'
 import IconeApp from '@/components/IconeApp.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { receitaService } from '@/services/receitaService'
@@ -377,6 +387,184 @@ onMounted(async () => {
   window.addEventListener('keydown', aoTeclar)
 })
 onUnmounted(() => window.removeEventListener('keydown', aoTeclar))
+
+const aguardarElemento = async (selector: string) => {
+  for (let i = 0; i < 30; i++) {
+    const el = document.querySelector(selector)
+    if (el) return el
+    await new Promise(r => setTimeout(r, 100))
+  }
+  throw new Error(`Elemento não encontrado: ${selector}`)
+}
+
+function iniciarTutorialEntradas() {
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: '.abas button:nth-child(1)',
+        popover: {
+          title: 'Aba Entradas',
+          description: 'Registra todo o dinheiro que você recebe das plataformas de trabalho (ganho bruto).',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.filtros .field:nth-child(1) input',
+        popover: {
+          title: 'Filtro Data Início',
+          description: 'Defina a data inicial para filtrar suas transações.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.filtros .field:nth-child(2) input',
+        popover: {
+          title: 'Filtro Data Fim',
+          description: 'Defina a data final para filtrar suas transações.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.filtros .field:nth-child(3) select',
+        popover: {
+          title: 'Filtro de Origem',
+          description: 'Filtre por plataforma de trabalho (Uber, 99, etc) para ver quanto ganhou em cada uma.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.lista',
+        popover: {
+          title: 'Lista de Entradas',
+          description: 'Visualize todas as suas receitas organizadas por data. Cada item mostra viagens, KM e horas trabalhadas.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.fab',
+        popover: {
+          title: 'Nova Entrada',
+          description: 'Clique aqui para registrar uma nova receita das plataformas de trabalho.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.abas button:nth-child(2)',
+        popover: {
+          title: 'Aba Saídas',
+          description: 'Registra todos os custos do seu trabalho que reduzem seu lucro. Clique em "Próximo" para ver as despesas.',
+          side: 'bottom',
+          align: 'center',
+          onNextClick: async () => {
+            driverObj.destroy()
+            await router.push({ path: '/transacoes', query: { tipo: 'S' } })
+            await router.isReady()
+            await nextTick()
+            await new Promise(resolve => setTimeout(resolve, 500))
+            await aguardarElemento('.filtros .field:nth-child(3) select')
+            iniciarTutorialSaidas()
+          }
+        }
+      }
+    ]
+  })
+  driverObj.drive()
+}
+
+function iniciarTutorialSaidas() {
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: '.filtros .field:nth-child(3) select',
+        popover: {
+          title: 'Filtro de Categoria',
+          description: 'Filtre por tipo de despesa (manutenção, lavagem, etc) para analisar gastos por categoria.',
+          side: 'bottom',
+          align: 'center'
+        }
+      },
+      {
+        element: '.lista',
+        popover: {
+          title: 'Lista de Saídas',
+          description: 'Visualize todas as suas despesas organizadas por data. Cada item mostra o tipo de gasto.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.fab',
+        popover: {
+          title: 'Nova Saída',
+          description: 'Clique aqui para registrar uma nova despesa do seu trabalho.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.abas button:nth-child(3)',
+        popover: {
+          title: 'Aba Recargas',
+          description: 'Registra o abastecimento de energia do seu veículo elétrico. Clique em "Próximo" para ver as recargas.',
+          side: 'bottom',
+          align: 'center',
+          onNextClick: async () => {
+            driverObj.destroy()
+            await router.push({ path: '/transacoes', query: { tipo: 'R' } })
+            await router.isReady()
+            await nextTick()
+            await new Promise(resolve => setTimeout(resolve, 500))
+            await aguardarElemento('.lista')
+            iniciarTutorialRecargas()
+          }
+        }
+      }
+    ]
+  })
+  driverObj.drive()
+}
+
+function iniciarTutorialRecargas() {
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: '.lista',
+        popover: {
+          title: 'Lista de Recargas',
+          description: 'Visualize todas as suas recargas de energia. Cada item mostra kWh consumidos e tarifa.',
+          side: 'left',
+          align: 'center'
+        }
+      },
+      {
+        element: '.fab',
+        popover: {
+          title: 'Nova Recarga',
+          description: 'Clique aqui para registrar uma nova recarga de energia do veículo elétrico.',
+          side: 'left',
+          align: 'center'
+        }
+      }
+    ]
+  })
+  driverObj.drive()
+}
+
+function iniciarTutorialTransacoes() {
+  if (tipo.value !== 'E') {
+    router.push({ path: '/transacoes', query: { tipo: 'E' } })
+  }
+  iniciarTutorialEntradas()
+}
 </script>
 
 <style scoped>
@@ -407,6 +595,11 @@ onUnmounted(() => window.removeEventListener('keydown', aoTeclar))
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
 }
+.topbar-botoes{display:flex;align-items:center;gap:.5rem}
+.botao-tutorial{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border:4px solid var(--accent);border-radius:8px;background:transparent;color:var(--text);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s ease}
+.botao-tutorial:hover{background:rgba(212,255,58,.1);transform:scale(1.05)}
+.botao-tutorial:active{transform:scale(.95)}
+.botao-tutorial svg{width:14px;height:14px;fill:var(--accent)}
 .head-txt { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
 .eyebrow {
   display: inline-flex; align-items: center; gap: .4rem;
