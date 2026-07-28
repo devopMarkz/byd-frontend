@@ -193,6 +193,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, computed, onUnmounted, nextTick } from 'vue'
 import { driver } from 'driver.js'
+import type { Side, Alignment } from 'driver.js'
 import 'driver.js/dist/driver.css'
 import '@/assets/driver-custom.css'
 import IconeApp from '@/components/IconeApp.vue'
@@ -404,15 +405,14 @@ function iniciarTutorialEntradas() {
     nextBtnText: 'Próximo',
     prevBtnText: 'Anterior',
     doneBtnText: 'Concluir',
-    closeBtnText: 'Fechar',
     steps: [
       {
         element: '.abas button:nth-child(1)',
         popover: {
           title: 'Aba Entradas',
           description: 'Registra todo o dinheiro que você recebe das plataformas de trabalho (ganho bruto).',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -420,8 +420,8 @@ function iniciarTutorialEntradas() {
         popover: {
           title: 'Filtro Data Início',
           description: 'Defina a data inicial para filtrar suas transações.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -429,8 +429,8 @@ function iniciarTutorialEntradas() {
         popover: {
           title: 'Filtro Data Fim',
           description: 'Defina a data final para filtrar suas transações.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -438,8 +438,8 @@ function iniciarTutorialEntradas() {
         popover: {
           title: 'Filtro de Origem',
           description: 'Filtre por plataforma de trabalho (Uber, 99, etc) para ver quanto ganhou em cada uma.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -447,8 +447,8 @@ function iniciarTutorialEntradas() {
         popover: {
           title: 'Lista de Entradas',
           description: 'Visualize todas as suas receitas organizadas por data. Cada item mostra viagens, KM e horas trabalhadas.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -456,8 +456,8 @@ function iniciarTutorialEntradas() {
         popover: {
           title: 'Nova Entrada',
           description: 'Clique aqui para registrar uma nova receita das plataformas de trabalho.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -465,8 +465,8 @@ function iniciarTutorialEntradas() {
         popover: {
           title: 'Aba Saídas',
           description: 'Registra todos os custos do seu trabalho que reduzem seu lucro. Clique em "Próximo" para ver as despesas.',
-          side: 'bottom',
-          align: 'center',
+          side: 'bottom' as Side,
+          align: 'center' as Alignment,
           onNextClick: async () => {
             driverObj.destroy()
             await router.push({ path: '/transacoes', query: { tipo: 'S' } })
@@ -489,15 +489,14 @@ function iniciarTutorialSaidas() {
     nextBtnText: 'Próximo',
     prevBtnText: 'Anterior',
     doneBtnText: 'Concluir',
-    closeBtnText: 'Fechar',
     steps: [
       {
         element: '.filtros .field:nth-child(3) select',
         popover: {
           title: 'Filtro de Categoria',
           description: 'Filtre por tipo de despesa (manutenção, lavagem, etc) para analisar gastos por categoria.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -505,8 +504,8 @@ function iniciarTutorialSaidas() {
         popover: {
           title: 'Lista de Saídas',
           description: 'Visualize todas as suas despesas organizadas por data. Cada item mostra o tipo de gasto.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -514,8 +513,8 @@ function iniciarTutorialSaidas() {
         popover: {
           title: 'Nova Saída',
           description: 'Clique aqui para registrar uma nova despesa do seu trabalho.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -523,8 +522,8 @@ function iniciarTutorialSaidas() {
         popover: {
           title: 'Aba Recargas',
           description: 'Registra o abastecimento de energia do seu veículo elétrico. Clique em "Próximo" para ver as recargas.',
-          side: 'bottom',
-          align: 'center',
+          side: 'bottom' as Side,
+          align: 'center' as Alignment,
           onNextClick: async () => {
             driverObj.destroy()
             await router.push({ path: '/transacoes', query: { tipo: 'R' } })
@@ -547,15 +546,14 @@ function iniciarTutorialRecargas() {
     nextBtnText: 'Próximo',
     prevBtnText: 'Anterior',
     doneBtnText: 'Concluir',
-    closeBtnText: 'Fechar',
     steps: [
       {
         element: '.lista',
         popover: {
           title: 'Lista de Recargas',
           description: 'Visualize todas as suas recargas de energia. Cada item mostra kWh consumidos e tarifa.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -563,8 +561,8 @@ function iniciarTutorialRecargas() {
         popover: {
           title: 'Nova Recarga',
           description: 'Clique aqui para registrar uma nova recarga de energia do veículo elétrico.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       }
     ]

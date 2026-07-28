@@ -104,6 +104,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { driver } from 'driver.js'
+import type { Side, Alignment } from 'driver.js'
 import 'driver.js/dist/driver.css'
 import '@/assets/driver-custom.css'
 import IconeApp from '@/components/IconeApp.vue'
@@ -166,15 +167,14 @@ function iniciarTutorialPainel() {
     nextBtnText: 'Próximo',
     prevBtnText: 'Anterior',
     doneBtnText: 'Concluir',
-    closeBtnText: 'Fechar',
     steps: [
       {
         element: 'nav.menu-inferior a[href="/"]',
         popover: {
           title: 'Menu - Painel',
           description: 'Aqui você vê o resumo financeiro, estatísticas detalhadas e o controle de jornada.',
-          side: 'top',
-          align: 'center'
+          side: 'top' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -182,8 +182,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Menu - Transações',
           description: 'Aqui você registra entradas (receitas), saídas (despesas) e recargas de energia.',
-          side: 'top',
-          align: 'center'
+          side: 'top' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -191,8 +191,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Menu - Configurações',
           description: 'Aqui você cadastra categorias de gastos, plataformas onde trabalha (origens), formas de pagamento, verifica histórico de jornadas e configura suas preferências do sistema.',
-          side: 'top',
-          align: 'center'
+          side: 'top' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -200,8 +200,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Seleção de Período',
           description: 'Escolha entre Diário, Semanal, Mensal, Anual ou Personalizado para analisar seus dados em diferentes escalas de tempo.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -209,8 +209,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Receita (Ganho Bruto)',
           description: 'Este é o valor total que você recebeu das plataformas antes de descontar qualquer despesa.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -218,8 +218,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Despesas',
           description: 'Este é o valor total de todos os seus custos (energia, manutenção, lavagem, etc).',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -227,8 +227,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Saldo (Ganho Líquido)',
           description: 'Este é o valor que realmente sobrou no seu bolso: Receita - Despesas.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -236,8 +236,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Viagens',
           description: 'Número total de corridas realizadas no período. Conta todas as viagens registradas nas entradas.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -245,8 +245,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Horas Trabalhadas',
           description: 'Tempo total trabalhado no período, calculado somando as horas de todas as jornadas.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -254,8 +254,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Quilômetros Rodados',
           description: 'Distância total percorrida em quilômetros. Importante para calcular custo por KM e desgaste do veículo.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -263,8 +263,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'R$/viagem (Ganho Bruto)',
           description: 'Quanto você ganha em média por cada corrida antes de descontar despesas. Calculado: Receita total ÷ Número de viagens.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -272,8 +272,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'R$/hora (Ganho Bruto)',
           description: 'Quanto você ganha em média por cada hora trabalhada antes de descontar despesas. Calculado: Receita total ÷ Horas trabalhadas.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -281,8 +281,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'R$/KM (Ganho Bruto)',
           description: 'Quanto você ganha em média por quilômetro rodado antes de descontar despesas. Calculado: Receita total ÷ Quilômetros rodados.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -290,8 +290,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Lucro/viagem (Ganho Líquido)',
           description: 'Quanto realmente sobra no bolso por cada corrida após descontar despesas. Calculado: (Receita - Despesas) ÷ Número de viagens.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -299,8 +299,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Lucro/hora (Ganho Líquido)',
           description: 'Quanto realmente sobra no bolso por cada hora trabalhada após descontar despesas. Calculado: (Receita - Despesas) ÷ Horas trabalhadas.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -308,8 +308,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Lucro/KM (Ganho Líquido)',
           description: 'Quanto realmente sobra no bolso por quilômetro rodado após descontar despesas. Calculado: (Receita - Despesas) ÷ Quilômetros rodados.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -317,8 +317,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Receita por Origem',
           description: 'Veja quanto ganhou em cada plataforma (Uber, 99, etc) e identifique qual é mais rentável.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -326,8 +326,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Última Jornada',
           description: 'Acompanhe rapidamente sua última atividade e veja se há uma jornada em andamento.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -335,8 +335,8 @@ function iniciarTutorialPainel() {
         popover: {
           title: 'Controle de Jornada',
           description: 'Use este botão para iniciar ou encerrar seu turno de trabalho rapidamente.',
-          side: 'left',
-          align: 'center'
+          side: 'left' as Side,
+          align: 'center' as Alignment
         }
       }
     ]

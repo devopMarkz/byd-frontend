@@ -86,6 +86,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { driver } from 'driver.js'
+import type { Side, Alignment } from 'driver.js'
 import 'driver.js/dist/driver.css'
 import '@/assets/driver-custom.css'
 import IconeApp from '@/components/IconeApp.vue'
@@ -105,15 +106,14 @@ function iniciarTutorial() {
     nextBtnText: 'Próximo',
     prevBtnText: 'Anterior',
     doneBtnText: 'Concluir',
-    closeBtnText: 'Fechar',
     steps: [
       {
         element: '#perfil',
         popover: {
           title: 'Perfil do motorista',
           description: 'Aqui você pode gerenciar seus dados pessoais e segurança da conta. Clique para editar nome e senha.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -121,8 +121,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Categorias de entrada',
           description: 'Cadastre as plataformas de trabalho onde você recebe corridas (Uber, 99, InDrive, etc). Isso ajuda a saber quanto ganhou em cada plataforma.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -130,8 +130,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Categorias de saída',
           description: 'Cadastre os tipos de despesas do seu trabalho (manutenção, lavagem, alimentação, aluguel, etc). Organize seus custos em categorias para melhor controle financeiro.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -139,8 +139,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Formas de pagamento',
           description: 'Cadastre as formas como você paga suas despesas (dinheiro, cartão, PIX, etc). Registra como você paga seus custos para controle financeiro.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -148,8 +148,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Jornadas',
           description: 'Visualize e gerencie todas as suas jornadas de trabalho (turnos). Permite ver histórico de turnos, editar horários e excluir jornadas.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -157,8 +157,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Personalizações',
           description: 'Configure a tarifa residencial de energia elétrica (R$/kWh) para cálculo automático de recargas. Isso serve como base para cálculos automáticos de custo de recarga.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -166,8 +166,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Metas',
           description: 'Funcionalidade futura para definir metas financeiras. Disponível em uma futura versão.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -175,8 +175,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Tema escuro',
           description: 'Alterne entre tema escuro e claro conforme sua preferência. A escolha é salva neste dispositivo.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       }
     ]

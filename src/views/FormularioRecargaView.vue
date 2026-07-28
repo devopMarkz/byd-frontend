@@ -79,6 +79,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { driver } from 'driver.js'
+import type { Side, Alignment } from 'driver.js'
 import 'driver.js/dist/driver.css'
 import '@/assets/driver-custom.css'
 import { useRoute, useRouter } from 'vue-router'
@@ -180,15 +181,14 @@ function iniciarTutorial() {
     nextBtnText: 'Próximo',
     prevBtnText: 'Anterior',
     doneBtnText: 'Concluir',
-    closeBtnText: 'Fechar',
     steps: [
       {
         element: '.voltar',
         popover: {
           title: 'Voltar',
           description: 'Clique para voltar para a lista de transações.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -196,8 +196,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Data',
           description: 'Selecione a data em que realizou a recarga.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -205,8 +205,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Dia da semana',
           description: 'Calculado automaticamente a partir da data selecionada.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -214,8 +214,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Cálculo automático',
           description: 'Preencha os 3 campos (potência, horas, tarifa) para calcular automaticamente o valor e kWh. Ou edite manualmente os campos abaixo.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -223,8 +223,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Potência (kW)',
           description: 'Digite a potência do carregador em kW (ex: 7.4 para carregamento rápido, 3.3 para normal).',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -232,8 +232,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Horas carregando',
           description: 'Digite quanto tempo o veículo ficou carregando em horas (ex: 4 para 4 horas).',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -241,8 +241,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Tarifa (R$/kWh)',
           description: 'Preço por kWh de energia. Preenchido automaticamente com o valor salvo em Personalizações, mas você pode editar.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -250,8 +250,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Valor (R$)',
           description: 'Custo total da recarga. Calculado automaticamente (kWh × tarifa), mas você pode editar manualmente.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -259,8 +259,8 @@ function iniciarTutorial() {
         popover: {
           title: 'kWh consumidos',
           description: 'Quantidade de energia carregada em kWh. Calculado automaticamente (potência × horas), mas você pode editar manualmente.',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -268,8 +268,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Local',
           description: 'Selecione onde realizou a recarga (casa, rua, shopping, trabalho ou outro).',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -277,8 +277,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Observação',
           description: 'Adicione notas sobre esta recarga (opcional).',
-          side: 'bottom',
-          align: 'center'
+          side: 'bottom' as Side,
+          align: 'center' as Alignment
         }
       },
       {
@@ -286,8 +286,8 @@ function iniciarTutorial() {
         popover: {
           title: 'Salvar',
           description: 'Clique para registrar esta recarga no sistema.',
-          side: 'top',
-          align: 'center'
+          side: 'top' as Side,
+          align: 'center' as Alignment
         }
       }
     ]

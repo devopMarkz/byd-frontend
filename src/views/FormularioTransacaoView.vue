@@ -79,6 +79,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { driver } from 'driver.js'
+import type { Side, Alignment } from 'driver.js'
 import 'driver.js/dist/driver.css'
 import '@/assets/driver-custom.css'
 import { useRoute, useRouter } from 'vue-router'
@@ -109,8 +110,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Voltar',
         description: 'Clique para voltar para a lista de transações.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -118,8 +119,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Data',
         description: 'Selecione a data em que recebeu o valor.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -127,8 +128,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Dia da semana',
         description: 'Calculado automaticamente a partir da data selecionada.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -136,8 +137,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Valor',
         description: 'Digite o valor total recebido das plataformas de trabalho (ganho bruto).',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -145,8 +146,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Origem',
         description: 'Selecione a plataforma de trabalho (Uber, 99, etc) onde recebeu o valor.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -154,8 +155,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Viagens',
         description: 'Digite o número de corridas realizadas neste período.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -163,8 +164,8 @@ function iniciarTutorial() {
       popover: {
         title: 'KM rodados',
         description: 'Digite a distância total percorrida em quilômetros.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -172,8 +173,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Puxar última jornada',
         description: 'Clique para preencher automaticamente com os dados da última jornada encerrada (data, horários, horas).',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -181,8 +182,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Jornada - início',
         description: 'Selecione o horário exato que começou a trabalhar. Opcional, mas recomendado para cálculos precisos.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -190,8 +191,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Jornada - fim',
         description: 'Selecione o horário exato que parou de trabalhar. O sistema calculará automaticamente as horas trabalhadas.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -199,8 +200,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Horas trabalhadas',
         description: 'Formato HH:mm. O sistema calcula automaticamente a partir de início e fim, mas você pode editar manualmente.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -208,8 +209,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Comprovante',
         description: 'Anexe a nota fiscal ou comprovante da receita (opcional). Máximo 5 MB.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -217,8 +218,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Observação',
         description: 'Adicione notas sobre esta receita (opcional).',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -226,8 +227,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Salvar',
         description: 'Clique para registrar esta receita no sistema.',
-        side: 'top',
-        align: 'center'
+        side: 'top' as Side,
+        align: 'center' as Alignment
       }
     }
   ] : [
@@ -236,8 +237,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Voltar',
         description: 'Clique para voltar para a lista de transações.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -245,8 +246,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Data',
         description: 'Selecione a data em que ocorreu a despesa.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -254,8 +255,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Dia da semana',
         description: 'Calculado automaticamente a partir da data selecionada.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -263,8 +264,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Valor',
         description: 'Digite o valor da despesa.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -272,8 +273,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Categoria',
         description: 'Selecione o tipo de despesa (manutenção, lavagem, alimentação, etc).',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -281,8 +282,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Tipo de gasto',
         description: 'Selecione se é um gasto diário/semanal (recorrente) ou mensal/pontual (ocasional).',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -290,8 +291,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Forma de pagamento',
         description: 'Selecione como pagou a despesa (dinheiro, cartão, PIX, etc). Opcional.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -299,8 +300,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Item de manutenção',
         description: 'Descreva o que foi reparado ou trocado (apenas para manutenções). Opcional.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -308,8 +309,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Nota fiscal',
         description: 'Anexe a nota fiscal ou comprovante da despesa (opcional). Máximo 5 MB.',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -317,8 +318,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Observação',
         description: 'Adicione notas sobre esta despesa (opcional).',
-        side: 'bottom',
-        align: 'center'
+        side: 'bottom' as Side,
+        align: 'center' as Alignment
       }
     },
     {
@@ -326,8 +327,8 @@ function iniciarTutorial() {
       popover: {
         title: 'Salvar',
         description: 'Clique para registrar esta despesa no sistema.',
-        side: 'top',
-        align: 'center'
+        side: 'top' as Side,
+        align: 'center' as Alignment
       }
     }
   ]
@@ -337,7 +338,6 @@ function iniciarTutorial() {
     nextBtnText: 'Próximo',
     prevBtnText: 'Anterior',
     doneBtnText: 'Concluir',
-    closeBtnText: 'Fechar',
     steps
   })
 
