@@ -235,6 +235,9 @@ export interface EncerrarJornadaRequest {
   percentualBateriaFinal: number
 }
 
+export type TipoEventoJornada = 'INICIO' | 'INICIO_PARADA' | 'FIM_PARADA' | 'FIM'
+export interface EventoJornada { tipo: TipoEventoJornada; dataHora: string }
+
 export interface JornadaResponse {
   id: string
   veiculoId: string
@@ -247,6 +250,7 @@ export interface JornadaResponse {
   percentualBateriaFinal: number | null
   status: string
   horarios?: string | null
+  eventos?: EventoJornada[]
   horasTrabalhadas?: number
 }
 
